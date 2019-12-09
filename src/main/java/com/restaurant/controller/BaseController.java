@@ -289,7 +289,7 @@ public class BaseController {
 		}
 		try {
 			orderDAO.saveOrder(cartInfo);
-			sendSimpleEmail(orderDAO.toOrderInfo(cartInfo));//need to fix in dao
+			sendSimpleEmail(orderDAO.toOrderInfo(cartInfo));
 		} catch (Exception e) {
 
 			return "shoppingCartConfirmation";

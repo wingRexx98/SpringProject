@@ -69,7 +69,7 @@ public class OrderDetailInfo {
 
 	@Override
 	public String toString() {
-		return String.format("|Item name: " + this.getFoodName() + " %-15|Quantity: " + this.getQuanity()
-				+ " %-15|Price based on quantity: " + this.getQuantityPrice() + " |\n");
+		return "|Item name: " + this.getFoodName() + " %-15|Quantity: " + this.getQuanity()
+				+ " %-15|Price based on quantity: " + this.getQuantityPrice() + " |\n";
 	}
 }
