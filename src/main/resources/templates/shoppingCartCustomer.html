@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Enter Customer Information</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">Enter Customer Information</div>
+
+	<form method="POST" th:object="${customerForm}"
+		th:action="@{/shoppingCartCustomer}">
+
+		<table>
+			<tr>
+				<td>Name *</td>
+				<td><input th:field="*{custName}" required="required" /></td>
+
+			</tr>
+			<tr>
+				<td>Email *</td>
+				<td><input pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+					title="Email must have @'email service'.com" th:field="*{email}"
+					required="required" /></td>
+
+			</tr>
+			<tr>
+				<td>Phone *</td>
+				<td><input th:field="*{phone}" required="required" /></td>
+
+			</tr>
+			<tr>
+				<td>Deliver address *</td>
+				<td><input th:field="*{address}" required="required" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" value="Submit" class="btn btn-success" />
+					<input type="reset" value="Reset" class="btn btn-danger"/></td>
+			</tr>
+		</table>
+
+	</form>
+
+	<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>

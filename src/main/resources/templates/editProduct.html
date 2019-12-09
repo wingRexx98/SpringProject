@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="utf-8" />
+<title>Edit Sale</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+	<div align="left">
+		<div class="page-title">Edit Food/Product</div>
+		<div th:if="${error!= null}" class="error-message" th:utext="${error}"></div>
+		<br />
+		<form th:action="@{/updateProduct}" th:object="${food}" method="POST"
+			enctype="multipart/form-data">
+			<table style="text-align: left;">
+				<tr>
+					<td>Food Name *</td>
+					<td><input type="text" th:field="*{foodName}"
+						required="required" /></td>
+
+				</tr>
+
+				<tr>
+					<td>Food Category *</td>
+					<td><select th:field="*{cateID}">
+							<option th:each="category : ${categoryList}"
+								th:value="${category.id}" th:utext="${category.name}" />
+					</select></td>
+
+				</tr>
+				<tr>
+					<td>Price *</td>
+					<td><input th:field="*{price}" type="number"
+						required="required" /></td>
+
+				</tr>
+				<tr>
+					<td>Ingredients *</td>
+					<td><input th:field="*{ingredients}" type="text"
+						required="required" /></td>
+
+				</tr>
+				<tr>
+					<td>Upload Image</td>
+					<td><input type="file" th:field="*{image}" /></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" th:field="*{id}" /></td>
+				</tr>
+				<tr>
+					<td><input th:href="@{|/editProduct?id=${food.id}|}"
+						type="submit" class="btn btn-outline-success" value="Update" /></td>
+				</tr>
+			</table>
+		</form>
+		<th:block th:include="/_footer"></th:block>
+	</div>
+</body>

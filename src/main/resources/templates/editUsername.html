@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Account Info</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">Account Info</div>
+	<div class="account-container">
+		<form th:object="${userLogin}" th:action="@{/updateUsername}"
+			method="POST">
+			<table>
+
+				<tr>
+					<td>Username</td>
+					<td><input type="text" th:field="*{userName}" required="required"></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input type="password" th:field="*{encryptedPassword}" required="required"></td>
+				</tr>
+
+			</table>
+			<div align="right">
+				<input type="submit" class="btn btn-outline-success" value="Update">
+				<input type="reset" class="btn btn-outline-secondary" value="Reset">
+			</div>
+		</form>
+
+	</div>
+	<th:block th:include="/_footer"></th:block>
+</body>
+</html>

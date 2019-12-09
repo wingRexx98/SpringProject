@@ -1,0 +1,69 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<button class="navbar-toggler" type="button" data-toggle="collapse"
+		data-target="#navbarSupportedContent"
+		aria-controls="navbarSupportedContent" aria-expanded="false"
+		aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div align="right" class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a>
+			</li>
+			<li class="nav-item"><a class="nav-link"
+				th:href="@{/productList}"> Product List </a></li>
+			<th:block th:if="${#request.userPrincipal == null}">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/shoppingCart}"> My Cart </a></li>
+			</th:block>
+			<th:block th:if="${#request.userPrincipal != null}"
+				sec:authorize="hasRole('ROLE_ADMIN')">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/newProduct}"> Create Product </a></li>
+			</th:block>
+			<th:block th:if="${#request.userPrincipal != null}">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/orderList}"> Order List </a></li>
+			</th:block>
+			<th:block th:if="${#request.userPrincipal != null}"
+				sec:authorize="hasRole('ROLE_ADMIN')">
+				<li class="nav-item"><a class="nav-link"
+					th:href="@{/addEmployee}"> Add a new Employee </a></li>
+			</th:block>
+			<th:block th:if="${#request.userPrincipal != null}">
+				<li class="nav-item"><a class="nav-link" th:href="@{/empList}">
+						Employee list </a></li>
+			</th:block>
+		</ul>
+	</div>
+</nav>
+
+<!--  <div class="menu-container" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<a th:href="@{/}">Home</a> | <a th:href="@{/productList}"> Product
+		List </a> |
+	<th:block th:if="${#request.userPrincipal == null}">
+		<a th:href="@{/shoppingCart}"> My Cart </a>
+   |
+     </th:block>
+	<th:block th:if="${#request.userPrincipal != null}">
+		<a th:href="@{/orderList}"> Order List </a>
+      |
+   </th:block>
+	<th:block th:if="${#request.userPrincipal != null}"
+		sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="@{/newProduct}"> Create Product </a>
+      |
+   </th:block>
+	<th:block th:if="${#request.userPrincipal != null}"
+		sec:authorize="hasRole('ROLE_ADMIN')">
+		<a th:href="@{/addEmployee}"> Add a new Employee </a>
+      |
+   </th:block>
+   <th:block th:if="${#request.userPrincipal != null}">
+		<a th:href="@{/empList}"> Employee list </a>
+      |
+   </th:block>
+</div>-->

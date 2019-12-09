@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Add new Employee</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">New Employee</div>
+	<div th:if="${error!= null}" class="error-message" th:utext="${error}"></div>
+
+	<form th:object="${empForm}" th:action="@{/saveEmpInfo}" method="POST"
+		enctype="multipart/form-data">
+		<table style="text-align: left;">
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>Name *</td>
+							<td><input
+								pattern="^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$"
+								title="Name must be without any number" type="text"
+								th:field="*{empName}" required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Role *</td>
+							<td><select th:field="*{roleId}">
+									<option th:each="role : ${roles}" th:value="${role.id}"
+										th:utext="${role.roleName}" />
+							</select></td>
+
+						</tr>
+						<tr>
+							<td>Phone *</td>
+							<td><input pattern="^//d{9}*$" th:field="*{phone}"
+								title="Phone must have 9 numbers no nore no less" type="tel"
+								required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Email *</td>
+							<td><input
+								pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+								title="Email must have @'email service'.com" th:field="*{email}"
+								type="text" required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Address *</td>
+							<td><input th:field="*{address}" type="text"
+								required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Date of birth *</td>
+							<td><input th:field="*{dob}" type="date" required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Hire date *</td>
+							<td><input th:field="*{hire_date}" type="date"
+								required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Salary *</td>
+							<td><input th:field="*{salary}" type="number"
+								required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Upload Image</td>
+							<td><input type="file" th:field="*{image}" /></td>
+							<td></td>
+						</tr>
+
+					</table>
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td>Employee login name *</td>
+							<td><input type="text" th:field="*{userName}"
+								required="required" /></td>
+
+						</tr>
+						<tr>
+							<td>Employee password *</td>
+							<td><input type="password" th:field="*{encryptedPassword}"
+								required="required" /></td>
+						</tr>
+
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" value="Add new employee" class="btn btn-outline-success"/></td>
+			</tr>
+		</table>
+	</form>
+
+	<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>

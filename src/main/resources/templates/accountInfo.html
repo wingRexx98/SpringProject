@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Account Info</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">Account Info</div>
+	<div class="account-container">
+		Info: <br>
+		<table>
+			<tr>
+				<td>Picture</td>
+				<td><img class="product-image"
+					th:src="@{|/empImage?id=${userInfo.id}|}" /></td>
+			</tr>
+			<tr>
+				<td>Name</td>
+				<td><span th:utext="${userInfo.empName}"></span></td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td><span th:utext="${userInfo.email}"></span></td>
+			</tr>
+			<tr>
+				<td>Phone</td>
+				<td><span th:utext="${userInfo.phone}"></span></td>
+			</tr>
+			<tr>
+				<td>Address</td>
+				<td><span th:utext="${userInfo.address}"></span></td>
+			</tr>
+			<tr>
+				<td>Date of birth</td>
+				<td><span th:utext="${userInfo.dob}"></span></td>
+			</tr>
+			<tr>
+				<td>Hire date</td>
+				<td><span th:utext="${userInfo.hire_date}"></span></td>
+			</tr>
+			<tr>
+				<td>Salary</td>
+				<td><span th:utext="${userInfo.salary}"></span></td>
+			</tr>
+
+		</table>
+		<div align="right">
+			<a class="btn btn-outline-secondary" th:href="@{|/editAccount?id=${userInfo.id}|}">Edit
+				Account</a>
+				
+			&nbsp;|&nbsp;
+			<a class="btn btn-outline-secondary" th:href="@{|/editUsername?id=${userInfo.id}|}">Edit
+				Username & Password</a>
+		</div>
+	</div>
+	<th:block th:include="/_footer"></th:block>
+</body>
+</html>

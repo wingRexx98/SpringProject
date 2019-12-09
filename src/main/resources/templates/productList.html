@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>Product List</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">Product List</div>
+
+	<div class="product-preview-container" th:each="food : ${list}">
+		<ul>
+			<li><img class="product-image"
+				th:src="@{|/productImage?id=${food.id}|}" /></li>
+			<li>Code: <span th:utext="${food.id}"></span></li>
+			<li>Name: <span th:utext="${food.foodName}"></span></li>
+			<li>Price: <span
+				th:utext="${#numbers.formatDecimal(food.price,3,2,'COMMA')}"></span></li>
+			<th:block th:if="${#request.userPrincipal == null}">
+				<li><a th:href="@{|/buyProduct?id=${food.id}|}"
+					class="btn btn-outline-success">Buy Now</a></li>
+			</th:block>
+			<!-- For Manager edit Product -->
+			<th:block th:if="${#request.userPrincipal != null}">
+				<li><a style="color: red;"
+					th:href="@{|/editProduct?id=${food.id}|}"
+					class="btn btn-outline-info">Edit Product</a></li>
+				<li><a th:href="@{|/removeProduct?id=${food.id}|}"
+					sec:authorize="hasAuthority('ROLE_ADMIN')"
+					class="btn btn-outline-danger">Delete Product</a></li>
+
+			</th:block>
+		</ul>
+	</div>
+
+	<br />
+
+	<div>
+		<a th:if="${pageIndex > 1}"
+			th:href="@{|/productList?page=${pageIndex-1}|}"> <-Back </a>
+		&nbsp;&nbsp; <a th:if="${pageIndex < 2}"
+			th:href="@{|/productList?page=${pageIndex+1}|}"> Next-> </a>
+	</div>
+
+	<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>

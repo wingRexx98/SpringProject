@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Order List</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title" align="center">
+		<h2 align="center">Order List</h2>
+	</div>
+	<div align="right">
+		Total Employees Count: <span th:utext="${totalRecords}"></span>
+	</div>
+	<br>
+	<table border="1" style="width: 100%">
+		<tr>
+			<th>Emp ID</th>
+			<th>Emp Name</th>
+			<th sec:authorize="hasRole('ROLE_ADMIN')">Emp Address</th>
+			<th>Emp Email</th>
+			<th>Emp phone</th>
+			<th>Date of birth</th>
+			<th sec:authorize="hasRole('ROLE_ADMIN')">Hire date</th>
+			<th sec:authorize="hasRole('ROLE_ADMIN')">Salary</th>
+			<th>Picture</th>
+			<th sec:authorize="hasRole('ROLE_ADMIN')">Promotion</th>
+			<th sec:authorize="hasRole('ROLE_ADMIN')">Deactivate account</th>
+		</tr>
+		<tr th:each="emp : ${list}">
+			<td th:utext="${emp.id}"></td>
+			<td th:utext="${emp.empName}"></td>
+			<td sec:authorize="hasRole('ROLE_ADMIN')" th:utext="${emp.address}"></td>
+			<td th:utext="${emp.email}"></td>
+			<td th:utext="${emp.phone}"></td>
+			<td th:utext="${emp.dob}"></td>
+			<td sec:authorize="hasRole('ROLE_ADMIN')" th:utext="${emp.hire_date}"></td>
+			<td style="color: red;" sec:authorize="hasRole('ROLE_ADMIN')"
+				th:utext="${#numbers.formatDecimal(emp.salary,4,2,'COMMA')}">
+			<td><img class="product-image"
+				th:src="@{|/empImage?id=${emp.id}|}" /></td>
+			<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+				th:href="@{|/promoteEmp?id=${emp.id}|}" class="btn btn-outline-success">Promote to Admin</a></td>
+			<td sec:authorize="hasRole('ROLE_ADMIN')"><a
+				th:href="@{|/disableEmp?id=${emp.id}|}" class="btn btn-outline-danger">Deactivate account</a></td>
+		</tr>
+	</table>
+	<div>
+		<a th:if="${pageIndex > 1}"
+			th:href="@{|/orderList?page=${pageIndex-1}|}"> <-Back </a>
+		&nbsp;&nbsp; <a th:if="${totalRecords > 5 and pageIndex < 2}"
+			th:href="@{|/orderList?page=${pageIndex+1}|}"> Next-> </a>
+	</div>
+
+	<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>

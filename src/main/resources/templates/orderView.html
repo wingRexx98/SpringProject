@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Product List</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">Order Info</div>
+
+	<div class="customer-info-container">
+		<h3>Customer Information:</h3>
+		<ul>
+			<li>Name: <span th:utext="${orderInfo.custName}"></span></li>
+			<li>Email: <span th:utext="${orderInfo.email}"></span></li>
+			<li>Phone: <span th:utext="${orderInfo.phone}"></span></li>
+			<li>Address: <span th:utext="${orderInfo.deliverAddress}"></span></li>
+		</ul>
+		<h3>Order Summary:</h3>
+		<form th:action="@{/updateOrder}" th:object="${orderInfo}"
+			method="post">
+			<table>
+				<tr>
+					<td><input type="hidden" th:field="*{id}"></td>
+				</tr>
+				<tr>
+					<td>Total: <span class="total"
+						th:utext="${#numbers.formatDecimal(orderInfo.totalPrice,3,2,'COMMA')}">
+					</span>
+					</td>
+					<td>Status: <th:block>
+							<a th:utext="${orderInfo.orderStatus}">.. </a>
+						</th:block> <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+							<select th:field="*{orderStatus}">
+								<option th:value="Done">Done</option>
+								<option th:value="Inprogress">Inprogress</option>
+								<option th:value="Cancel">Cancel</option>
+							</select>
+						</th:block>
+					</td>
+					<td><input sec:authorize="hasRole('ROLE_ADMIN')"  class="btn btn-outline-secondary" type="submit" value="Update"></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<br />
+	<div class="detail-container">
+		<table border="1" style="width: 100%">
+			<tr>
+				<th>Product Code</th>
+				<th>Product Name</th>
+				<th>Quantity</th>
+				<th>Price</th>
+				<th>Image</th>
+			</tr>
+			<tr th:each="orderDetailInfo : ${orderInfo.details}">
+				<td th:utext="${orderDetailInfo.foodId}"></td>
+				<td th:utext="${orderDetailInfo.foodName}"></td>
+				<td th:utext="${orderDetailInfo.quanity}"></td>
+				<td
+					th:utext="${#numbers.formatDecimal(orderDetailInfo.quantityPrice,3,2,'COMMA')}"></td>
+				<td><img class="product-image"
+					th:src="@{|/productImage?id=${orderDetailInfo.foodId}|}" /></td>
+			</tr>
+		</table>
+	</div>
+	<th:block th:include="/_footer"></th:block>
+
+</body>
+</html>
