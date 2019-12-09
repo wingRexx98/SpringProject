@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +29,9 @@ import com.restaurant.model.Category;
 import com.restaurant.model.Customer;
 import com.restaurant.model.Food;
 import com.restaurant.model.FoodInfo;
+import com.restaurant.model.OrderInfo;
 import com.restaurant.model.ShoppingCart;
+import com.restaurant.util.MyConstants;
 import com.restaurant.util.Utils;
 
 @Controller
@@ -40,6 +44,9 @@ public class BaseController {
 
 	@Autowired
 	private OrderDAO orderDAO;
+	
+	@Autowired
+	public JavaMailSender emailSender;
 
 	@RequestMapping("/403")
 	public String accessDenied(Principal principal) {
@@ -282,6 +289,7 @@ public class BaseController {
 		}
 		try {
 			orderDAO.saveOrder(cartInfo);
+			sendSimpleEmail(orderDAO.toOrderInfo(cartInfo));//need to fix in dao
 		} catch (Exception e) {
 
 			return "shoppingCartConfirmation";
@@ -293,6 +301,21 @@ public class BaseController {
 		Utils.removeCartInSession(request);
 
 		return "redirect:/shoppingCartFinalize";
+	}
+	
+	public void sendSimpleEmail(OrderInfo order) {
+
+		// Create a Simple MailMessage.
+		SimpleMailMessage message = new SimpleMailMessage();
+
+		message.setTo(MyConstants.FRIEND_EMAIL);
+		message.setSubject("Japanese Restaurant");
+		message.setText("Hello, this is the receive for your order:\n " + order.toString());
+
+		// Send Message!
+		this.emailSender.send(message);
+
+//		return "Email Sent!";
 	}
 
 	// Finalise the purchase

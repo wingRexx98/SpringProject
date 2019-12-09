@@ -1,5 +1,7 @@
 package com.restaurant.model;
 
+import org.springframework.util.SocketUtils;
+
 public class OrderDetailInfo {
 
 	private int foodId;
@@ -65,4 +67,9 @@ public class OrderDetailInfo {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return String.format("|Item name: " + this.getFoodName() + " %-15|Quantity: " + this.getQuanity()
+				+ " %-15|Price based on quantity: " + this.getQuantityPrice() + " |\n");
+	}
 }

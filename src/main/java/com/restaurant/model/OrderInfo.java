@@ -1,5 +1,6 @@
 package com.restaurant.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderInfo {
@@ -16,7 +17,7 @@ public class OrderInfo {
 	private double totalPrice;
 
 	private String orderStatus;
-	
+
 	private boolean enabled;
 
 	public boolean isEnabled() {
@@ -110,4 +111,18 @@ public class OrderInfo {
 		super();
 	}
 
+	@Override
+	public String toString() {
+		return "Order number: " + this.getId() + "\nCustomer: " + this.getCustName() + "\nPhone  number: "
+				+ this.getPhone() + "\nDeliver to this address: " + this.getDeliverAddress() + "\nItems: \n"
+				+ this.getAllItems()+"\nTotal: "+this.totalPrice;
+	}
+
+	public List<String> getAllItems() {
+		List<String> list = new ArrayList<String>();
+		for (OrderDetailInfo detail : this.details) {
+			list.add(detail.toString());
+		}
+		return list;
+	}
 }

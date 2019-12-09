@@ -167,10 +167,34 @@ public class OrderDAO extends JdbcDaoSupport {
 			return null;
 		}
 	}
-	
+
 	public void removeOrder(int id) {
 		String sql = "UPDATE Orders SET enabled = 0 where id = ?";
 		this.getJdbcTemplate().update(sql, id);
+	}
+
+	public OrderInfo toOrderInfo(ShoppingCart cart) {
+		OrderInfo info = new OrderInfo();
+		info.setId(this.getMaxOrderId());
+		info.setCustName(cart.getCustomer().getCustName());
+		info.setDeliverAddress(cart.getCustomer().getAddress());
+		info.setEmail(cart.getCustomer().getEmail());
+		info.setPhone(cart.getCustomer().getPhone());
+
+		List<OrderDetailInfo> details = new ArrayList<>();
+		for (ShoppingCartLine line : cart.getCartLines()) {
+			OrderDetailInfo detail = new OrderDetailInfo();
+			detail.setFoodId(line.getFood().getId());
+			detail.setFoodName(line.getFood().getFoodName());
+			detail.setQuanity(line.getQuantity());
+			detail.setQuantityPrice(line.getAmount());
+			details.add(detail);
+		}
+
+		info.setDetails(details);
+
+		info.setTotalPrice(cart.getAmountTotal());
+		return info;
 	}
 
 }
