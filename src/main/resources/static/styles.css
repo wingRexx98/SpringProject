@@ -1,12 +1,16 @@
 html {
     background: white;
+    margin: 0px 0px 150px 200px;
+    max-width: 900px;
+    min-width: 360px;
 }
 h3 {
     margin: 0px;
     padding: 0px;
 }
 body {
-    max-width: 860px;
+	align-content: center;
+    max-width: 900px;
     min-width: 360px;
     margin: 0px auto;
     background: #EDE9E9;

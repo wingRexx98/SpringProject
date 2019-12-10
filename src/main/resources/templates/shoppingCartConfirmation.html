@@ -19,25 +19,25 @@
          </ul>
          <h3>Cart Summary:</h3>
          <ul>
-            <li>Quantity: <span th:utext="${myCart.quantityTotal}"></span>$</li>
+            <li>Quantity: <span th:utext="${myCart.quantityTotal}"></span></li>
             <li>Total:
                <span class="total"
                   th:utext="${#numbers.formatDecimal(myCart.amountTotal,3,2,'COMMA')}">  
-               </span>
+               </span>$
             </li>
          </ul>
       </div>
       <form method="POST" th:action="@{/completeConfirmation}">
          <!-- Edit Cart -->
-         <a class="navi-item" th:href="@{/shoppingCart}">
+         <a class="btn btn-outline-info btn-sm" th:href="@{/shoppingCart}">
          Edit Cart
          </a>
          <!-- Edit Customer Info -->
-         <a class="navi-item" th:href="@{/shoppingCartCustomer}">
+         <a class="btn btn-outline-info btn-sm" th:href="@{/shoppingCartCustomer}">
          Edit Customer Info
          </a>
          <!-- Send/Save -->
-         <input type="submit" value="Send" class="button-send-sc" />
+         <input type="submit" value="Send" class="btn btn-outline-success btn-sm" />
       </form>
       <div class="container">
          <div class="product-preview-container" th:each="cartLineInfo : ${myCart.cartLines}">

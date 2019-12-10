@@ -3,23 +3,24 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		<div class="site-name">
-			<a class="navbar-brand" th:href="@{/}">JP Restaurant Shop</a>
-		</div>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet"
 			media="screen" />
 		<script th:src="@{/jquery/jquery.min.js}"></script>
 		<script th:src="@{/popper/popper.min.js}"></script>
 		<script th:src="@{/bootstrap/js/bootstrap.min.js}"></script>
+
+		<div class="site-name">
+			<a class="navbar-brand" th:href="@{/}">JP Restaurant Shop</a>
+		</div>
+
 		<div align="center" class="header-bar">
 			<th:block th:if="${#request.userPrincipal != null}">
-				<a class="nav-link" th:href="@{/accountInfo}">Account info </a>&nbsp;|&nbsp;
-			<!-- <a th:utext="${#request.userPrincipal.name}"></a> -->
 				<a class="nav-link" th:href="@{/logout}">Logout</a>
 			</th:block>
 			<a class="nav-link" th:if="${#request.userPrincipal == null}"
 				th:href="@{/login}">Login</a>
 		</div>
+
 	</nav>
 </div>

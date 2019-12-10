@@ -1,6 +1,5 @@
 package com.restaurant.model;
 
-import org.springframework.util.SocketUtils;
 
 public class OrderDetailInfo {
 

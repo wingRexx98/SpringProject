@@ -1,15 +1,15 @@
 package com.restaurant.util;
 
-import org.apache.commons.validator.routines.EmailValidator;
+//import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
+//import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 import com.restaurant.form.EmpForm;
 
 public class EmpValidator implements Validator {
-
-	private EmailValidator emailValidator = EmailValidator.getInstance();
+//
+//	private EmailValidator emailValidator = EmailValidator.getInstance();
 
 	@Override
 	public boolean supports(Class<?> clazz) {

@@ -38,19 +38,11 @@
 
 			<td sec:authorize="hasRole('ROLE_ADMIN')"><a
 				th:href="@{|/removeOrder?id=${orderInfo.id}|}"
-				class="btn btn-outline-danger">Delete</a></td>
+				class="btn btn-outline-danger btn-sm">Delete</a></td>
 			<td><a th:href="@{|/orderView?id=${orderInfo.id}|}"
-				class="btn btn-outline-info">View</a></td>
+				class="btn btn-outline-info btn-sm">View</a></td>
 		</tr>
 	</table>
-	<!--  <div class="page-navigator" th:if="${paginationResult.totalPages > 1}" >
-         <th:block th:each="page: ${paginationResult.navigationPages}">
-            <a th:if="${page != -1}" class="nav-item"
-               th:href="@{|/admin/orderList?page=${page}|}" th:utext="${page}"></a>
-                
-            <span th:if="${page == -1}" class="nav-item"> ... </span>
-         </th:block>
-      </div>-->
 	<div>
 		<a th:if="${pageIndex > 1}"
 			th:href="@{|/orderList?page=${pageIndex-1}|}"> <-Back </a>

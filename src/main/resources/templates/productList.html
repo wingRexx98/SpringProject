@@ -22,16 +22,16 @@
 				th:utext="${#numbers.formatDecimal(food.price,3,2,'COMMA')}"></span></li>
 			<th:block th:if="${#request.userPrincipal == null}">
 				<li><a th:href="@{|/buyProduct?id=${food.id}|}"
-					class="btn btn-outline-success">Buy Now</a></li>
+					class="btn btn-outline-success btn-sm">Buy Now</a></li>
 			</th:block>
 			<!-- For Manager edit Product -->
 			<th:block th:if="${#request.userPrincipal != null}">
-				<li><a style="color: red;"
+				<li><a style="color: yellow;"
 					th:href="@{|/editProduct?id=${food.id}|}"
-					class="btn btn-outline-info">Edit Product</a></li>
+					class="btn btn-outline-info btn-sm">Edit Product</a></li>
 				<li><a th:href="@{|/removeProduct?id=${food.id}|}"
 					sec:authorize="hasAuthority('ROLE_ADMIN')"
-					class="btn btn-outline-danger">Delete Product</a></li>
+					class="btn btn-outline-danger btn-sm">Delete Product</a></li>
 
 			</th:block>
 		</ul>
