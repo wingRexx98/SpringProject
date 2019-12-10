@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Account Info</title>
+<title th:utext="${userInfo.empName}" >Account Info</title>
 <link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
 </head>
 <body>
@@ -12,7 +12,6 @@
 
 	<div class="page-title">Account Info</div>
 	<div class="account-container">
-		Info: <br>
 		<table>
 			<tr>
 				<td>Picture</td>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title th:utext="${food.foodName}"> Info</title>
+<link rel="stylesheet" type="text/css" th:href="@{/styles.css}">
+</head>
+<body>
+
+	<th:block th:include="/_header"></th:block>
+	<th:block th:include="/_menu"></th:block>
+
+	<div class="page-title">
+		<span th:utext="${food.foodName}"></span> detail
+	</div>
+	<div class="account-container">
+		Info: <br>
+		<table>
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<td>Food Name</td>
+							<td><span th:utext="${food.foodName}"></span></td>
+						</tr>
+						<tr>
+							<td>Category</td>
+							<td><span th:utext="${cate.name}"></span></td>
+						</tr>
+						<tr>
+							<td>Price</td>
+							<td><span th:utext="${food.price}"></span></td>
+						</tr>
+						<tr>
+							<td>Ingredients</td>
+							<td><span th:utext="${food.ingredients}"></span></td>
+						</tr>
+
+					</table>
+				</td>
+				<td><table>
+						<tr>
+							<td><img class="product-image"
+								th:src="@{|/productImage?id=${food.id}|}" /></td>
+						</tr>
+						<tr>
+							<td><th:block th:if="${#request.userPrincipal == null}">
+									<a th:href="@{|/buyProduct?id=${food.id}|}"
+										class="btn btn-outline-success btn-sm">Add to cart</a>
+								</th:block></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+		<th:block th:if="${#request.userPrincipal != null}">
+			<div align="right">
+				<a class="btn btn-outline-info btn-sm"
+					th:href="@{|/editProduct?id=${food.id}|}">Edit Product</a> <a
+					class="btn btn-outline-danger btn-sm"
+					sec:authorize="hasAuthority('ROLE_ADMIN')"
+					th:href="@{|/removeProduct?id=${food.id}|}">Disable</a>
+			</div>
+		</th:block>
+	</div>
+	<th:block th:include="/_footer"></th:block>
+</body>
+</html>

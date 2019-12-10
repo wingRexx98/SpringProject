@@ -38,7 +38,7 @@ public class CategoryDAO extends JdbcDaoSupport {
 	
 	public Category findCategory(int id) throws DataAccessException {
 		Category cate = null;
-		String sql = SQLCommands.ALL_CATE + "WHERE id = ?";
+		String sql = SQLCommands.ALL_CATE + " AND id = ?";
 		Object[] params = new Object[] {id};
 		CategoryMapper mapper = new CategoryMapper();
 		cate = this.getJdbcTemplate().queryForObject(sql, params, mapper);

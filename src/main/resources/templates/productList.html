@@ -20,6 +20,8 @@
 			<li>Name: <span th:utext="${food.foodName}"></span></li>
 			<li>Price: <span
 				th:utext="${#numbers.formatDecimal(food.price,3,2,'COMMA')}"></span></li>
+			<li><a th:href="@{|/productDetail?id=${food.id}|}"
+				class="btn btn-outline-info btn-sm">Details</a></li>
 			<th:block th:if="${#request.userPrincipal == null}">
 				<li><a th:href="@{|/buyProduct?id=${food.id}|}"
 					class="btn btn-outline-success btn-sm">Buy Now</a></li>

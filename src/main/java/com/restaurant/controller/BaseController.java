@@ -330,4 +330,13 @@ public class BaseController {
 		model.addAttribute("lastOrderedCart", lastOrderedCart);
 		return "shoppingCartFinalize";
 	}
+	
+	@RequestMapping(value = { "/productDetail" }, method = RequestMethod.GET)
+	public String productView(@RequestParam(name = "id") int id, Model model) {
+		Food food = foodDAO.findFood(id);
+		model.addAttribute("food", food);
+		Category cate = categoryDAO.findCategory(food.getCateID());
+		model.addAttribute("cate", cate);
+		return "productDetail";
+	}
 }
