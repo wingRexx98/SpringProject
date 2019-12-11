@@ -1,7 +1,7 @@
 html {
     background: white;
-    margin: 0px 0px 150px 200px;
-    max-width: 900px;
+    margin: 0px 0px 90px 90px;
+    max-width: 1200px;
     min-width: 360px;
 }
 h3 {
@@ -10,7 +10,7 @@ h3 {
 }
 body {
 	align-content: center;
-    max-width: 900px;
+    max-width: 1200px;
     min-width: 360px;
     margin: 0px auto;
     background: #EDE9E9;

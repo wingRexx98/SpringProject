@@ -2,6 +2,7 @@ package com.restaurant.controller;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +45,7 @@ public class BaseController {
 
 	@Autowired
 	private OrderDAO orderDAO;
-	
+
 	@Autowired
 	public JavaMailSender emailSender;
 
@@ -296,13 +297,13 @@ public class BaseController {
 		}
 		// store lastest order for finalization
 		Utils.storeLastOrderedCartInSession(request, cartInfo);
-		
+
 		// Delete cart from session
 		Utils.removeCartInSession(request);
 
 		return "redirect:/shoppingCartFinalize";
 	}
-	
+
 	public void sendSimpleEmail(OrderInfo order) {
 
 		// Create a Simple MailMessage.
@@ -330,7 +331,7 @@ public class BaseController {
 		model.addAttribute("lastOrderedCart", lastOrderedCart);
 		return "shoppingCartFinalize";
 	}
-	
+
 	@RequestMapping(value = { "/productDetail" }, method = RequestMethod.GET)
 	public String productView(@RequestParam(name = "id") int id, Model model) {
 		Food food = foodDAO.findFood(id);
@@ -339,4 +340,32 @@ public class BaseController {
 		model.addAttribute("cate", cate);
 		return "productDetail";
 	}
+
+	@RequestMapping(value = { "/productSearch" }, method = RequestMethod.GET)
+	public String findProduct(@RequestParam(name = "search") String searchName, Model model,
+			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
+		List<Food> foods = foodDAO.getFood();
+		List<Food> list = new ArrayList<Food>();
+		int i = 0;
+		for(Food f : foods) {
+			if(f.getFoodName().contains(searchName)) {
+				list.add(f);
+				i++;
+			}
+		}
+		System.out.println(i);
+		String error = null;
+		String message = null;
+		if (list.isEmpty() || list == null) {
+			error = "No such dish found";
+			model.addAttribute("error", error);
+		} else {
+			message = "Found dish" + list.size();
+			model.addAttribute("message", message);
+			model.addAttribute("list", list);
+		}
+		model.addAttribute("pageIndex", pageIndex);
+		return "productList";
+	}
+
 }

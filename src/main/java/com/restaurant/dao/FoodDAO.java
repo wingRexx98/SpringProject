@@ -126,34 +126,6 @@ public class FoodDAO extends JdbcDaoSupport {
 		}
 	}
 
-	public List<Food> findFoodWithNamePart(String searchName) {
-		List<Food> foods = new ArrayList<Food>();
-
-		String sql = SQLCommands.FIND_FOOD_WITH_NAME_LIKE;
-		Object[] params = new Object[] { searchName };
-		FoodMapper mapper = new FoodMapper();
-		try {
-			foods = this.getJdbcTemplate().query(sql, params, mapper);
-			return foods;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
-	public Food findFoodWithName(String searchName) {
-		Food food = new Food();
-
-		String sql = SQLCommands.FIND_FOOD_WITH_NAME;
-		Object[] params = new Object[] { searchName };
-		FoodMapper mapper = new FoodMapper();
-		try {
-			food = this.getJdbcTemplate().queryForObject(sql, params, mapper);
-			return food;
-		} catch (Exception e) {
-			return null;
-		}
-	}
-
 	public Food findFood(int id) {
 		Food food = new Food();
 
@@ -190,5 +162,5 @@ public class FoodDAO extends JdbcDaoSupport {
 			return null;
 		}
 	}
-
 }
+

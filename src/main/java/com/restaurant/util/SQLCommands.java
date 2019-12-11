@@ -15,9 +15,6 @@ public class SQLCommands {
 	
 	public static final String FIND_FOOD = "SELECT * FROM Food WHERE id = ? AND enabled = 1";
 	
-	public static final String FIND_FOOD_WITH_NAME = "SELECT * FROM Food WHERE foodName = ? AND enabled = 1";
-	
-	public static final String FIND_FOOD_WITH_NAME_LIKE = "SELECT * FROM Food WHERE foodName = ? AND enabled = 1";
 
 	public static final String ADD_FOOD = "INSERT INTO Food(cateId, foodName, price, ingredients, image, enabled) VALUES (?, ?, ?, ?, ?, 1)";
 

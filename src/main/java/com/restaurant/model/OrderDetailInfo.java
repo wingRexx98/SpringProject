@@ -68,7 +68,10 @@ public class OrderDetailInfo {
 
 	@Override
 	public String toString() {
-		return "|Item name: " + this.getFoodName() + " %-15|Quantity: " + this.getQuanity()
-				+ " %-15|Price based on quantity: " + this.getQuantityPrice() + " |\n";
+		String format1 = String.format("|%-30s|", "Item name: "+ this.getFoodName());
+		String format2 = String.format("|%-30s|", "Quantity: "+ this.getQuanity());
+		String format3 = String.format("|%-30s|", "Price based on quantity: "+ this.getQuantityPrice());
+		String finalString = "\n"+ format1.concat(format2).concat(format3);
+		return finalString;
 	}
 }

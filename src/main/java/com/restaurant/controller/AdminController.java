@@ -210,7 +210,7 @@ public class AdminController {
 			Principal principal) throws IOException {
 		int check = 0;
 		check = empDAO.updateEmpbyEmp(form, id);
-		if(check == 0) {
+		if (check == 0) {
 			Employee emp = empDAO.findEmp(id);
 			model.addAttribute("employee", emp);
 			return "redirect:/editAccount";
@@ -230,11 +230,73 @@ public class AdminController {
 			Principal principal) {
 		int check = 0;
 		check = loginDAO.updateAccountByEmp(form, id);
-		if(check == 0) {
+		if (check == 0) {
 			UserLogin loginInfo = loginDAO.findAccountByEmp(id);
 			model.addAttribute("userLogin", loginInfo);
 			return "redirect:/editUsername";
 		}
 		return "redirect:/accountInfo";
+	}
+
+	@RequestMapping(value = { "/empSearch" })
+	public String empSearch(@RequestParam(name = "search") String searchName, Model model,
+			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
+		List<Employee> emps = empDAO.allEmpWithEmpRole();
+		int total = emps.size();
+		List<Employee> searchResults = new ArrayList<>();
+		for (Employee e : emps) {
+			if (e.getEmpName().contains(searchName)) {
+				searchResults.add(e);
+			}
+		}
+		String error = null;
+		String message = null;
+		if (searchResults.isEmpty() || searchResults == null) {
+			error = "No emp found";
+			model.addAttribute("error", error);
+		} else {
+			message = "Found " + searchResults.size() + " Employees";
+			model.addAttribute("message", message);
+			model.addAttribute("list", searchResults);
+		}
+		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("totalRecords", total);
+		return "empList";
+	}
+	
+	@RequestMapping(value = { "/orderSearch" })
+	public String orderSearch(@RequestParam(name = "search") String searchName, Model model,
+			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
+		List<Order> orders = orderDAO.listOfOrder();
+		List<Order> list = new ArrayList<>();
+		for(Order o : orders) {
+			if(o.getCustName().contains(searchName)) {
+				list.add(o);
+			}
+		}
+		List<OrderInfo> infos = toInfo(list);
+		String error = null;
+		String message = null;
+		if (list.isEmpty() || list == null) {
+			error = "No emp found";
+			model.addAttribute("error", error);
+		} else {
+			message = "Found " + list.size() + " Orders made by customer "+searchName;
+			model.addAttribute("message", message);
+			model.addAttribute("list", infos);
+		}
+		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("totalRecords", list.size());
+		return "orderList";
+	}
+	
+	public List<OrderInfo> toInfo(List<Order> orders){
+		List<OrderInfo> infos = new ArrayList<>();
+		for(Order o : orders) {
+			OrderInfo info = new OrderInfo(o.getId(), o.getCustName(), o.getEmail(), o.getPhone(),
+					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled());
+			infos.add(info);
+		}
+		return infos;
 	}
 }

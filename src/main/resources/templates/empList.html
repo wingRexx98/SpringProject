@@ -14,7 +14,15 @@
 	</div>
 	<div align="right">
 		Total Employees Count: <span th:utext="${totalRecords}"></span>
+	
+	<div align="center" th:if="${message!= null}" style="color: green;" th:utext="${message}"></div>
+		<form class="form-inline my-2 my-lg-0" th:action="@{/empSearch}" th:object="${search}">
+			<input class="form-control mr-sm-2" type="search"
+				placeholder="Search" aria-label="Search" name = "search" id="search">
+			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+		</form>
 	</div>
+	<div align="center" th:if="${error!= null}" class="error-message" th:utext="${error}"></div>
 	<br>
 	<table border="1" style="width: 100%">
 		<tr>

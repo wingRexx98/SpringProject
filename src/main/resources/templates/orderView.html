@@ -31,10 +31,12 @@
 						th:utext="${#numbers.formatDecimal(orderInfo.totalPrice,3,2,'COMMA')}">
 					</span>
 					</td>
-					<td>Status: <th:block>
+					<td>Status: <th:block sec:authorize="hasRole('ROLE_EMPLOYEE')">
 							<a th:utext="${orderInfo.orderStatus}">.. </a>
 						</th:block> <th:block sec:authorize="hasRole('ROLE_ADMIN')">
 							<select th:field="*{orderStatus}">
+								<option selected="selected" th:value="${orderInfo.orderStatus}"><a
+										th:utext="${orderInfo.orderStatus}"></a></option>
 								<option th:value="Done">Done</option>
 								<option th:value="Inprogress">Inprogress</option>
 								<option th:value="Cancel">Cancel</option>

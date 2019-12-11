@@ -113,16 +113,13 @@ public class OrderInfo {
 
 	@Override
 	public String toString() {
-		return "Order number: " + this.getId() + "\nCustomer: " + this.getCustName() + "\nPhone  number: "
-				+ this.getPhone() + "\nDeliver to this address: " + this.getDeliverAddress() + "\nItems: \n"
-				+ this.getAllItems()+"\nTotal: "+this.totalPrice;
+		String order = "Order number: " + this.getId() + "\nCustomer: " + this.getCustName() + "\nPhone  number: "
+				+ this.getPhone() + "\nDeliver to this address: " + this.getDeliverAddress() + "\nItems: ";
+		for (OrderDetailInfo detail : this.details) {
+			order = order.concat(detail.toString());
+		}
+		order = order.concat("\nTotal: " + this.totalPrice);
+		return order;
 	}
 
-	public List<String> getAllItems() {
-		List<String> list = new ArrayList<String>();
-		for (OrderDetailInfo detail : this.details) {
-			list.add(detail.toString());
-		}
-		return list;
-	}
 }
