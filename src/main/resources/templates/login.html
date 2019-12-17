@@ -19,8 +19,7 @@
 			th:if="${#session != null && #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}">
 			<div th:if="${#request.getParameter('error') == 'true'}"
 				style="color: red; margin: 10px 0px;">
-				Login Failed!!!<br /> Reason : <span
-					th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}"></span>
+				Login Failed!!!<br /> Please check your username or password
 			</div>
 		</th:block>
 
