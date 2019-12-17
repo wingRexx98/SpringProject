@@ -312,7 +312,7 @@ public class BaseController {
 		// Create a Simple MailMessage.
 		SimpleMailMessage message = new SimpleMailMessage();
 
-		message.setTo(MyConstants.FRIEND_EMAIL);
+		message.setTo(order.getEmail());
 		message.setSubject("Japanese Restaurant");
 		message.setText("Hello, this is the receive for your order:\n " + order.toString());
 
