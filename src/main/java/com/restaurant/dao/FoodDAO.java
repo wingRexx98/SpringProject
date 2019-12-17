@@ -139,10 +139,10 @@ public class FoodDAO extends JdbcDaoSupport {
 			return null;
 		}
 	}
-	
+
 	public FoodInfo findFoodInfo(int id) {
 		Food food = this.findFood(id);
-		if(food != null) {
+		if (food != null) {
 			FoodInfo info = new FoodInfo(food.getId(), food.getFoodName(), food.getPrice());
 			return info;
 		}
@@ -163,4 +163,3 @@ public class FoodDAO extends JdbcDaoSupport {
 		}
 	}
 }
-

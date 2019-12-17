@@ -12,14 +12,17 @@
 
 	<div class="page-title">Product List</div>
 	<div align="right">
-	<div align="center" th:if="${message!= null}" style="color: green;" th:utext="${message}"></div>
-		<form class="form-inline my-2 my-lg-0" th:action="@{/productSearch}" th:object="${search}">
+		<div align="center" th:if="${message!= null}" style="color: green;"
+			th:utext="${message}"></div>
+		<form class="form-inline my-2 my-lg-0" th:action="@{/productSearch}"
+			th:object="${search}">
 			<input class="form-control mr-sm-2" type="search"
-				placeholder="Search" aria-label="Search" name = "search" id="search">
+				placeholder="Search" aria-label="Search" name="search" id="search">
 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
 		</form>
 	</div>
-	<div align="center" th:if="${error!= null}" class="error-message" th:utext="${error}"></div>
+	<div align="center" th:if="${error!= null}" class="error-message"
+		th:utext="${error}"></div>
 	<div class="product-preview-container" th:each="food : ${list}">
 		<ul>
 			<li><img class="product-image"
@@ -50,10 +53,12 @@
 	<br />
 
 	<div>
-		<a th:if="${pageIndex > 1}"
-			th:href="@{|/productList?page=${pageIndex-1}|}"> <-Back </a>
+		<th:block th:if="${pageSize < totalRecord}">
+			<a th:if="${pageIndex > 1}"
+				th:href="@{|/productList?page=${pageIndex-1}|}"> <-Back </a>
 		&nbsp;&nbsp; <a th:if="${pageIndex < 2}"
-			th:href="@{|/productList?page=${pageIndex+1}|}"> Next-> </a>
+				th:href="@{|/productList?page=${pageIndex+1}|}"> Next-> </a>
+		</th:block>
 	</div>
 
 	<th:block th:include="/_footer"></th:block>

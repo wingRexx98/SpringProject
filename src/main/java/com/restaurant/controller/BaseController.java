@@ -67,8 +67,11 @@ public class BaseController {
 			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
 		int pageSize = 5;
 		List<Food> foods = foodDAO.pageRecords(pageIndex, pageSize);
+		List<Food> list = foodDAO.getFood();
 		model.addAttribute("list", foods);
 		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("totalRecord", list.size());
 		return "productList";
 	}
 
@@ -360,10 +363,12 @@ public class BaseController {
 			error = "No such dish found";
 			model.addAttribute("error", error);
 		} else {
-			message = "Found dish" + list.size();
+			message = "Found dish " + list.size();
 			model.addAttribute("message", message);
 			model.addAttribute("list", list);
 		}
+		model.addAttribute("pageSize", 5);
+		model.addAttribute("totalRecord", list.size());
 		model.addAttribute("pageIndex", pageIndex);
 		return "productList";
 	}
