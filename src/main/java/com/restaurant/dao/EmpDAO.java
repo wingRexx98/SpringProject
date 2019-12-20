@@ -127,10 +127,9 @@ public class EmpDAO extends JdbcDaoSupport {
 
 	public List<Employee> allEmpWithEmpRole() {
 		List<Employee> list = new ArrayList<>();
-		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,\r\n"
-				+ "				e.hire_date, e.salary, e.image \r\n" + "                FROM Employee e \r\n"
-				+ "        Join user_login ul on e.id = ul.empid \r\n"
-				+ "        join user_role ur on ur.id = ul.roleId Where ur.roleName = 'ROLE_EMPLOYEE'";
+		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
+				+ "FROM Employee e Join user_login ul on e.id = ul.empid join user_role ur "
+				+ "on ur.id = ul.roleId Where ur.roleName = 'ROLE_EMPLOYEE' AND ul.enabled = 1";
 		Object[] params = new Object[] {};
 		EmpMapper mapper = new EmpMapper();
 

@@ -174,7 +174,10 @@ public class AdminController {
 		List<Employee> emps = empDAO.employees(pageIndex, pageSize);
 		model.addAttribute("list", emps);
 		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("totalRecords", total);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("totalRecord", total);
+		model.addAttribute("size", total);
+		System.out.println(emps.size());
 		return "empList";
 	}
 
@@ -259,8 +262,10 @@ public class AdminController {
 			model.addAttribute("message", message);
 			model.addAttribute("list", searchResults);
 		}
+		model.addAttribute("pageSize", 5);
+		model.addAttribute("size",searchResults.size());
 		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("totalRecords", total);
+		model.addAttribute("totalRecord", total);
 		return "empList";
 	}
 	

@@ -13,7 +13,7 @@
 		<h2 align="center">Order List</h2>
 	</div>
 	<div align="right">
-		Total Employees Count: <span th:utext="${totalRecords}"></span>
+		Total Employees Count: <span th:utext="${totalRecord}"></span>
 	
 	<div align="center" th:if="${message!= null}" style="color: green;" th:utext="${message}"></div>
 		<form class="form-inline my-2 my-lg-0" th:action="@{/empSearch}" th:object="${search}">
@@ -57,10 +57,12 @@
 		</tr>
 	</table>
 	<div>
-		<a th:if="${pageIndex > 1}"
-			th:href="@{|/orderList?page=${pageIndex-1}|}"> <-Back </a>
-		&nbsp;&nbsp; <a th:if="${totalRecords > 5 and pageIndex < 2}"
-			th:href="@{|/orderList?page=${pageIndex+1}|}"> Next-> </a>
+		<th:block th:if="${pageSize < size}">
+			<a th:if="${pageIndex > 1}"
+				th:href="@{|/empList?page=${pageIndex-1}|}"> <-Back </a>
+		&nbsp;&nbsp; <a th:if="${pageIndex < 2}"
+				th:href="@{|/empList?page=${pageIndex+1}|}"> Next-> </a>
+		</th:block>
 	</div>
 
 	<th:block th:include="/_footer"></th:block>
