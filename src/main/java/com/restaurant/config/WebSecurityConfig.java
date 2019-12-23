@@ -18,7 +18,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
-	
+
 	@Autowired
 	private DataSource dataSource;
 
@@ -42,7 +42,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// Các yêu cầu phải login cho ben restaurant
 		// Nếu chưa login, nó sẽ redirect tới trang /admin/login.
 		http.authorizeRequests()
-				.antMatchers("/orderList", "/orderView", "/accountInfo", "/empList", "/editAccount", "/editUsername")//
+				.antMatchers("/orderList", "/orderView", "/accountInfo", "/empList", "/editAccount", "/editUsername",
+						"/orderSearch", "/empSearch")//
 				.access("hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')");
 
 		// Các trang chỉ dành cho admin
@@ -66,13 +67,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				// (Sau khi logout, chuyển tới trang home)
 				.and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
 
-		//Config remember me to work for 24h
+		// Config remember me to work for 24h
 		http.authorizeRequests().and() //
 				.rememberMe().tokenRepository(this.persistentTokenRepository()) //
 				.tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
 	}
 
-	//Store the remember me info into a table in the database 
+	// Store the remember me info into a table in the database
 	@Bean
 	public PersistentTokenRepository persistentTokenRepository() {
 		JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
