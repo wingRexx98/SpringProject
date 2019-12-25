@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,9 +33,7 @@ import com.restaurant.model.FoodInfo;
 import com.restaurant.model.Order;
 import com.restaurant.model.OrderInfo;
 import com.restaurant.model.ShoppingCart;
-import com.restaurant.util.MyConstants;
 import com.restaurant.util.Utils;
-import com.sun.mail.handlers.message_rfc822;
 
 @Controller
 public class BaseController {
