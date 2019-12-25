@@ -68,6 +68,8 @@ public class BaseController {
 		int pageSize = 5;
 		List<Food> foods = foodDAO.pageRecords(pageIndex, pageSize);
 		List<Food> list = foodDAO.getFood();
+		List<Category> cates = categoryDAO.getCategory();
+		model.addAttribute("categoryList", cates);
 		model.addAttribute("list", foods);
 		model.addAttribute("pageIndex", pageIndex);
 		model.addAttribute("pageSize", pageSize);
@@ -318,8 +320,6 @@ public class BaseController {
 
 		// Send Message!
 		this.emailSender.send(message);
-
-//		return "Email Sent!";
 	}
 
 	// Finalise the purchase
@@ -349,14 +349,11 @@ public class BaseController {
 			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
 		List<Food> foods = foodDAO.getFood();
 		List<Food> list = new ArrayList<Food>();
-		int i = 0;
-		for(Food f : foods) {
-			if(f.getFoodName().contains(searchName)) {
+		for (Food f : foods) {
+			if (f.getFoodName().contains(searchName)) {
 				list.add(f);
-				i++;
 			}
 		}
-		System.out.println(i);
 		String error = null;
 		String message = null;
 		if (list.isEmpty() || list == null) {
@@ -367,7 +364,39 @@ public class BaseController {
 			model.addAttribute("message", message);
 			model.addAttribute("list", list);
 		}
-		model.addAttribute("pageSize", 5);
+		model.addAttribute("pageSize", list.size());
+		model.addAttribute("totalRecord", list.size());
+		model.addAttribute("pageIndex", pageIndex);
+		return "productList";
+	}
+
+	@RequestMapping(value = { "/byCategory" }, method = RequestMethod.GET)
+	public String getProductWithCategory(@RequestParam(name = "cateId") int cateId, Model model,
+			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
+
+		if (cateId == 0) {
+			return "redirect:/productList";
+		}
+		List<Food> foods = foodDAO.getFood();
+		List<Food> list = new ArrayList<Food>();
+		for (Food f : foods) {
+			if (f.getCateID() == cateId) {
+				list.add(f);
+			}
+		}
+		String error = null;
+		String message = null;
+		if (list.isEmpty() || list == null) {
+			error = "No such dish found";
+			model.addAttribute("error", error);
+		} else {
+			message = "Found dish " + list.size();
+			model.addAttribute("message", message);
+			model.addAttribute("list", list);
+		}
+		List<Category> cates = categoryDAO.getCategory();
+		model.addAttribute("categoryList", cates);
+		model.addAttribute("pageSize", list.size());
 		model.addAttribute("totalRecord", list.size());
 		model.addAttribute("pageIndex", pageIndex);
 		return "productList";

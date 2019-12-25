@@ -14,8 +14,18 @@
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link" th:href="@{/}">Home</a>
 				</li>
-				<li class="nav-item"><a class="nav-link"
-					th:href="@{/productList}"> Product List </a></li>
+				<li class="nav-item dropdown"><a
+					class="nav-link dropdown-toggle" data-toggle="dropdown"
+					aria-haspopup="true" aria-expanded="false"
+					th:href="@{/productList}"> Product List </a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+						<a class="dropdown-item" th:href="@{/byCategory?cateId=0}">All</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" th:href="@{/byCategory?cateId=3}">Apertiser</a>
+						<a class="dropdown-item" th:href="@{/byCategory?cateId=1}">Main
+							course</a> <a class="dropdown-item" th:href="@{/byCategory?cateId=2}">Desert</a>
+					</div></li>
+
 				<th:block th:if="${#request.userPrincipal == null}">
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/shoppingCart}"> My Cart </a></li>
