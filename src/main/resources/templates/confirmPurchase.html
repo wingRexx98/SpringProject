@@ -11,19 +11,21 @@
 	<th:block th:include="/_menu"></th:block>
 
 	<div class="page-title">Confirme the purchase</div>
-	<div th:if="${mesage!= null}" class="error-message" th:utext="${message}"></div>
+	<div th:if="${message!= null}" class="error-message"
+		th:utext="${message}"></div>
 
-	<form th:object="${order}" th:action="@{/confirmPurchase}"
+	<form th:object="${conCode}" th:action="@{/confirmPurchase}"
 		method="POST">
 		<table style="text-align: left;">
 			<tr>
 				<td>Code *</td>
-				<td><input type="number" th:field="*{conCode}"
-					required="required" /></td>
+				<td><input class="form-control mr-sm-2" type="number"
+					placeholder="Enter the code" name="conCode" id="conCode"
+					required="required"></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><input type="submit" class="btn btn-success" value="Submit" /></td>
+				<td><input type="submit" class="btn btn-success btn-sm" value="Submit" /></td>
 			</tr>
 		</table>
 	</form>

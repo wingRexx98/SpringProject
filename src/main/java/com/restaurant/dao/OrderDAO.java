@@ -221,7 +221,8 @@ public class OrderDAO extends JdbcDaoSupport {
 		return code;
 	}
 
-	public String confirmPurchase(int id, String conCode) {
+	public String confirmPurchase(String conCode) {
+		int id = this.getMaxOrderId();
 		Order order = findOrder(id);
 		String message = "";
 		if(conCode.equals(order.getConCode())) {

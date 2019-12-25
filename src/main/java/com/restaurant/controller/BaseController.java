@@ -31,10 +31,12 @@ import com.restaurant.model.Category;
 import com.restaurant.model.Customer;
 import com.restaurant.model.Food;
 import com.restaurant.model.FoodInfo;
+import com.restaurant.model.Order;
 import com.restaurant.model.OrderInfo;
 import com.restaurant.model.ShoppingCart;
 import com.restaurant.util.MyConstants;
 import com.restaurant.util.Utils;
+import com.sun.mail.handlers.message_rfc822;
 
 @Controller
 public class BaseController {
@@ -301,12 +303,33 @@ public class BaseController {
 
 			return "shoppingCartConfirmation";
 		}
+
+		return "redirect:/confirmPurchaseForm";
+	}
+	
+	@RequestMapping(value = { "/confirmPurchaseForm" }, method = RequestMethod.GET)
+	public String completePurChaseForm(Model model) {
+		
+		return "confirmPurchase";
+	}
+
+	@RequestMapping(value = { "/confirmPurchase" }, method = RequestMethod.POST)
+	public String completePurChase(HttpServletRequest request, Model model, @RequestParam("conCode") String conCode) {
+		try {
+			String message = orderDAO.confirmPurchase(conCode);
+			model.addAttribute("message", message);
+		} catch (Exception e) {
+			model.addAttribute("message", e.getMessage());
+			return "confirmPurchase";
+		}
+
+		ShoppingCart cartInfo = Utils.getCartInSession(request);
+
 		// store lastest order for finalization
 		Utils.storeLastOrderedCartInSession(request, cartInfo);
 
 		// Delete cart from session
 		Utils.removeCartInSession(request);
-
 		return "redirect:/shoppingCartFinalize";
 	}
 
@@ -314,11 +337,12 @@ public class BaseController {
 
 		// Create a Simple MailMessage.
 		SimpleMailMessage message = new SimpleMailMessage();
+		Order o = orderDAO.findOrder(order.getId());
 
 		message.setTo(order.getEmail());
 		message.setSubject("Japanese Restaurant");
 		message.setText("Hello, this is the receive for your order:\n " + order.toString()
-				+ "\n This is the confirm code: " + order.getConCode());
+				+ "\n\n This is the confirm code: " + o.getConCode());
 
 		// Send Message!
 		this.emailSender.send(message);
@@ -404,23 +428,4 @@ public class BaseController {
 		return "productList";
 	}
 
-	public int randomNumbers() {
-		Random random = new Random();
-		int rand = 0;
-		while (true) {
-			rand = random.nextInt(10);
-			if (rand != 0)
-				break;
-		}
-		return rand;
-	}
-
-	public String validationCodeGenerator() {
-		String code = "";
-		for (int i = 0; i < 6; i++) {
-			int random = randomNumbers();
-			code += random;
-		}
-		return code;
-	}
 }
