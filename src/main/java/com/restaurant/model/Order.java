@@ -24,19 +24,26 @@ public class Order implements Serializable {
 
 	private String orderStatus;
 
+	private String conCode;
+
+	private boolean confirmed;
+
 	private boolean enabled;
 
-	public Order(int id, String custName, String email, String phone, String deliverAddress, double totalPrice,
-			String orderStatus, boolean enabled) {
-		super();
-		this.id = id;
-		this.custName = custName;
-		this.email = email;
-		this.phone = phone;
-		this.deliverAddress = deliverAddress;
-		this.totalPrice = totalPrice;
-		this.orderStatus = orderStatus;
-		this.enabled = enabled;
+	public String getConCode() {
+		return conCode;
+	}
+
+	public void setConCode(String conCode) {
+		this.conCode = conCode;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
 	}
 
 	public boolean isEnabled() {
@@ -105,6 +112,21 @@ public class Order implements Serializable {
 
 	public Order() {
 		super();
+	}
+
+	public Order(int id, String custName, String email, String phone, String deliverAddress, double totalPrice,
+			String orderStatus, String conCode, boolean confirmed, boolean enabled) {
+		super();
+		this.id = id;
+		this.custName = custName;
+		this.email = email;
+		this.phone = phone;
+		this.deliverAddress = deliverAddress;
+		this.totalPrice = totalPrice;
+		this.orderStatus = orderStatus;
+		this.conCode = conCode;
+		this.confirmed = confirmed;
+		this.enabled = enabled;
 	}
 
 }

@@ -70,7 +70,7 @@ public class AdminController {
 		List<OrderInfo> infos = new ArrayList<OrderInfo>();
 		for (Order o : orders) {
 			OrderInfo info = new OrderInfo(o.getId(), o.getCustName(), o.getEmail(), o.getPhone(),
-					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled());
+					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),o.isConfirmed());
 			infos.add(info);
 		}
 		model.addAttribute("list", infos);
@@ -299,7 +299,7 @@ public class AdminController {
 		List<OrderInfo> infos = new ArrayList<>();
 		for(Order o : orders) {
 			OrderInfo info = new OrderInfo(o.getId(), o.getCustName(), o.getEmail(), o.getPhone(),
-					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled());
+					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),o.isConfirmed());
 			infos.add(info);
 		}
 		return infos;

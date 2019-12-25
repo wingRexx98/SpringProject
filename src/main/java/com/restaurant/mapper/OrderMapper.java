@@ -19,7 +19,10 @@ public class OrderMapper implements RowMapper<Order> {
 		order.setDeliverAddress(rs.getString("deliverAddress"));
 		order.setOrderStatus(rs.getString("orderStatus"));
 		order.setTotalPrice(rs.getDouble("totalPrice"));
-		
+		order.setConCode(rs.getString("conCode"));
+		order.setConfirmed(rs.getBoolean("confirmed"));
+		order.setEnabled(rs.getBoolean("enabled"));
+
 		return order;
 	}
 

@@ -20,6 +20,26 @@ public class OrderInfo {
 
 	private boolean enabled;
 
+	private String conCode;
+
+	private boolean confirmed;
+
+	public String getConCode() {
+		return conCode;
+	}
+
+	public void setConCode(String conCode) {
+		this.conCode = conCode;
+	}
+
+	public boolean isConfirmed() {
+		return confirmed;
+	}
+
+	public void setConfirmed(boolean confirmed) {
+		this.confirmed = confirmed;
+	}
+
 	public boolean isEnabled() {
 		return enabled;
 	}
@@ -95,7 +115,7 @@ public class OrderInfo {
 	}
 
 	public OrderInfo(int id, String custName, String email, String phone, String deliverAddress, double totalPrice,
-			String orderStatus, boolean enabled) {
+			String orderStatus, boolean enabled, String conCode, boolean confirmed) {
 		super();
 		this.id = id;
 		this.custName = custName;
@@ -105,8 +125,9 @@ public class OrderInfo {
 		this.totalPrice = totalPrice;
 		this.orderStatus = orderStatus;
 		this.enabled = enabled;
+		this.conCode = conCode;
+		this.confirmed = confirmed;
 	}
-
 	public OrderInfo() {
 		super();
 	}

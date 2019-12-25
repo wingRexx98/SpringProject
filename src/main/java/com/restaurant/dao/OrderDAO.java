@@ -2,6 +2,7 @@ package com.restaurant.dao;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.sql.DataSource;
 
@@ -57,10 +58,12 @@ public class OrderDAO extends JdbcDaoSupport {
 		order.setDeliverAddress(customer.getAddress());
 		order.setTotalPrice(cart.getAmountTotal());
 		order.setOrderStatus("Not done");
+		order.setConCode(this.validationCodeGenerator());
 
-		String sql = "Insert into Orders VALUES (?, ?, ?, ?, ?, ?, ?, 1)";
+		String sql = "Insert into Orders VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?,0)";
 		status = this.getJdbcTemplate().update(sql, order.getId(), order.getCustName(), order.getEmail(),
-				order.getPhone(), order.getDeliverAddress(), order.getTotalPrice(), order.getOrderStatus());
+				order.getPhone(), order.getDeliverAddress(), order.getTotalPrice(), order.getOrderStatus(),
+				order.getConCode());
 
 		List<ShoppingCartLine> lines = cart.getCartLines();
 		sql = "Insert into order_detail VALUES (?, ?, ?, ?)";
@@ -135,7 +138,8 @@ public class OrderDAO extends JdbcDaoSupport {
 		Order order = this.findOrder(id);
 		if (order != null) {
 			return new OrderInfo(order.getId(), order.getCustName(), order.getEmail(), order.getPhone(),
-					order.getDeliverAddress(), order.getTotalPrice(), order.getOrderStatus(), order.isEnabled());
+					order.getDeliverAddress(), order.getTotalPrice(), order.getOrderStatus(), order.isEnabled(),
+					order.getConCode(), order.isConfirmed());
 		}
 		return null;
 	}
@@ -197,4 +201,37 @@ public class OrderDAO extends JdbcDaoSupport {
 		return info;
 	}
 
+	public int randomNumbers() {
+		Random random = new Random();
+		int rand = 0;
+		while (true) {
+			rand = random.nextInt(10);
+			if (rand != 0)
+				break;
+		}
+		return rand;
+	}
+
+	public String validationCodeGenerator() {
+		String code = "";
+		for (int i = 0; i < 6; i++) {
+			int random = randomNumbers();
+			code += random;
+		}
+		return code;
+	}
+
+	public String confirmPurchase(int id, String conCode) {
+		Order order = findOrder(id);
+		String message = "";
+		if(conCode.equals(order.getConCode())) {
+			String sql = "UPDATE Orders SET confirmed = 1 WHERE id = ?";
+			this.getJdbcTemplate().update(sql, id);
+			message = "Confirmed completed";
+		}
+		else
+			message = "Incorrect confirmation code";
+		return message;
+	}
+	
 }

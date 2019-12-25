@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -316,7 +317,8 @@ public class BaseController {
 
 		message.setTo(order.getEmail());
 		message.setSubject("Japanese Restaurant");
-		message.setText("Hello, this is the receive for your order:\n " + order.toString());
+		message.setText("Hello, this is the receive for your order:\n " + order.toString()
+				+ "\n This is the confirm code: " + order.getConCode());
 
 		// Send Message!
 		this.emailSender.send(message);
@@ -402,4 +404,23 @@ public class BaseController {
 		return "productList";
 	}
 
+	public int randomNumbers() {
+		Random random = new Random();
+		int rand = 0;
+		while (true) {
+			rand = random.nextInt(10);
+			if (rand != 0)
+				break;
+		}
+		return rand;
+	}
+
+	public String validationCodeGenerator() {
+		String code = "";
+		for (int i = 0; i < 6; i++) {
+			int random = randomNumbers();
+			code += random;
+		}
+		return code;
+	}
 }
