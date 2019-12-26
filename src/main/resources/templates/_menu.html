@@ -27,8 +27,8 @@
 						<div class="dropdown-divider"></div>
 						<th:block th:if="${#request.userPrincipal != null}"
 							sec:authorize="hasRole('ROLE_ADMIN')">
-							<li class="nav-item"><a class="nav-link"
-								th:href="@{/newProduct}"> Create Product </a></li>
+							<a class="dropdown-item" th:href="@{/newProduct}"> Create
+								Product </a>
 						</th:block>
 					</div></li>
 
@@ -42,7 +42,8 @@
 						th:href="@{/orderList}"> Order List </a></li>
 				</th:block>
 
-				<th:block th:if="${#request.userPrincipal != null}" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+				<th:block th:if="${#request.userPrincipal != null}"
+					sec:authorize="hasRole('ROLE_EMPLOYEE')">
 					<li class="nav-item"><a class="nav-link" th:href="@{/empList}">
 							Employee list </a></li>
 				</th:block>
@@ -51,7 +52,7 @@
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" data-toggle="dropdown"
 						aria-haspopup="true" aria-expanded="false" th:href="@{/empList}">
-							Employee list </a>
+							Employee </a>
 						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
 							<a class="dropdown-item" th:href="@{/list}">All</a>
 							<div class="dropdown-divider"></div>
@@ -60,11 +61,8 @@
 							<div class="dropdown-divider"></div>
 							<a class="dropdown-item" th:href="@{/disabledList}">Disabled</a>
 							<div class="dropdown-divider"></div>
-							<th:block th:if="${#request.userPrincipal != null}"
-								sec:authorize="hasRole('ROLE_ADMIN')">
-								<li class="nav-item"><a class="nav-link"
-									th:href="@{/addEmployee}"> Add a new Employee </a></li>
-							</th:block>
+							<a class="dropdown-item" th:href="@{/addEmployee}"> Add a new
+								Employee </a>
 						</div></li>
 				</th:block>
 				<th:block th:if="${#request.userPrincipal != null}">
