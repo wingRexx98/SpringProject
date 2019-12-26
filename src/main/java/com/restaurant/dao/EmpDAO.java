@@ -137,6 +137,42 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	public List<Employee> allAdmin() {
+		List<Employee> list = new ArrayList<>();
+		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
+				+ "FROM Employee e Join user_login ul on e.id = ul.empid join user_role ur "
+				+ "on ur.id = ul.roleId Where ur.roleName = 'ROLE_ADMIN' AND ul.enabled = 1";
+		Object[] params = new Object[] {};
+		EmpMapper mapper = new EmpMapper();
+
+		list = this.getJdbcTemplate().query(sql, params, mapper);
+		return list;
+	}
+
+	public List<Employee> allList() {
+		List<Employee> list = new ArrayList<>();
+		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
+				+ "FROM Employee e Join user_login ul on e.id = ul.empid join user_role ur "
+				+ "on ur.id = ul.roleId Where ul.enabled = 1";
+		Object[] params = new Object[] {};
+		EmpMapper mapper = new EmpMapper();
+
+		list = this.getJdbcTemplate().query(sql, params, mapper);
+		return list;
+	}
+
+	public List<Employee> disabledList() {
+		List<Employee> list = new ArrayList<>();
+		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
+				+ "FROM Employee e Join user_login ul on e.id = ul.empid join user_role ur "
+				+ "on ur.id = ul.roleId Where ul.enabled = 0";
+		Object[] params = new Object[] {};
+		EmpMapper mapper = new EmpMapper();
+
+		list = this.getJdbcTemplate().query(sql, params, mapper);
+		return list;
+	}
+
 	public List<UserLogin> allUserLogin() {
 		List<UserLogin> list = new ArrayList<>();
 		String sql = "Select * from User_Login";

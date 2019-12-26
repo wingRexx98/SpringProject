@@ -24,29 +24,48 @@
 						<a class="dropdown-item" th:href="@{/byCategory?cateId=3}">Apertiser</a>
 						<a class="dropdown-item" th:href="@{/byCategory?cateId=1}">Main
 							course</a> <a class="dropdown-item" th:href="@{/byCategory?cateId=2}">Desert</a>
+						<div class="dropdown-divider"></div>
+						<th:block th:if="${#request.userPrincipal != null}"
+							sec:authorize="hasRole('ROLE_ADMIN')">
+							<li class="nav-item"><a class="nav-link"
+								th:href="@{/newProduct}"> Create Product </a></li>
+						</th:block>
 					</div></li>
 
 				<th:block th:if="${#request.userPrincipal == null}">
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/shoppingCart}"> My Cart </a></li>
 				</th:block>
-				<th:block th:if="${#request.userPrincipal != null}"
-					sec:authorize="hasRole('ROLE_ADMIN')">
-					<li class="nav-item"><a class="nav-link"
-						th:href="@{/newProduct}"> Create Product </a></li>
-				</th:block>
+
 				<th:block th:if="${#request.userPrincipal != null}">
 					<li class="nav-item"><a class="nav-link"
 						th:href="@{/orderList}"> Order List </a></li>
 				</th:block>
-				<th:block th:if="${#request.userPrincipal != null}"
-					sec:authorize="hasRole('ROLE_ADMIN')">
-					<li class="nav-item"><a class="nav-link"
-						th:href="@{/addEmployee}"> Add a new Employee </a></li>
-				</th:block>
-				<th:block th:if="${#request.userPrincipal != null}">
+
+				<th:block th:if="${#request.userPrincipal != null}" sec:authorize="hasRole('ROLE_EMPLOYEE')">
 					<li class="nav-item"><a class="nav-link" th:href="@{/empList}">
 							Employee list </a></li>
+				</th:block>
+				<th:block th:if="${#request.userPrincipal != null}"
+					sec:authorize="hasRole('ROLE_ADMIN')">
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" data-toggle="dropdown"
+						aria-haspopup="true" aria-expanded="false" th:href="@{/empList}">
+							Employee list </a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" th:href="@{/list}">All</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" th:href="@{/empList}">Employees</a> <a
+								class="dropdown-item" th:href="@{/adminList}">Admins</a>
+							<div class="dropdown-divider"></div>
+							<a class="dropdown-item" th:href="@{/disabledList}">Disabled</a>
+							<div class="dropdown-divider"></div>
+							<th:block th:if="${#request.userPrincipal != null}"
+								sec:authorize="hasRole('ROLE_ADMIN')">
+								<li class="nav-item"><a class="nav-link"
+									th:href="@{/addEmployee}"> Add a new Employee </a></li>
+							</th:block>
+						</div></li>
 				</th:block>
 				<th:block th:if="${#request.userPrincipal != null}">
 					<li class="nav-item"><a class="nav-link"

@@ -70,7 +70,8 @@ public class AdminController {
 		List<OrderInfo> infos = new ArrayList<OrderInfo>();
 		for (Order o : orders) {
 			OrderInfo info = new OrderInfo(o.getId(), o.getCustName(), o.getEmail(), o.getPhone(),
-					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),o.isConfirmed());
+					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),
+					o.isConfirmed());
 			infos.add(info);
 		}
 		model.addAttribute("list", infos);
@@ -177,7 +178,54 @@ public class AdminController {
 		model.addAttribute("pageSize", pageSize);
 		model.addAttribute("totalRecord", total);
 		model.addAttribute("size", total);
-		System.out.println(emps.size());
+		return "empList";
+	}
+
+	// Admin list
+	@RequestMapping(value = { "/adminList" })
+	public String listOfAdmins(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
+			Principal principal) {
+
+		int total = empDAO.allAdmin().size();
+		int pageSize = total;
+		List<Employee> emps = empDAO.allAdmin();
+		model.addAttribute("list", emps);
+		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("totalRecord", total);
+		model.addAttribute("size", total);
+		return "empList";
+	}
+
+	// all list
+	@RequestMapping(value = { "/list" })
+	public String allEmployee(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
+			Principal principal) {
+
+		int total = empDAO.allList().size();
+		int pageSize = total;
+		List<Employee> emps = empDAO.allList();
+		model.addAttribute("list", emps);
+		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("totalRecord", total);
+		model.addAttribute("size", total);
+		return "empList";
+	}
+
+	// all list
+	@RequestMapping(value = { "/disabledList" })
+	public String allDisabledEmployee(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
+			Principal principal) {
+
+		int total = empDAO.disabledList().size();
+		int pageSize = total;
+		List<Employee> emps = empDAO.disabledList();
+		model.addAttribute("list", emps);
+		model.addAttribute("pageIndex", pageIndex);
+		model.addAttribute("pageSize", pageSize);
+		model.addAttribute("totalRecord", total);
+		model.addAttribute("size", total);
 		return "empList";
 	}
 
@@ -263,19 +311,19 @@ public class AdminController {
 			model.addAttribute("list", searchResults);
 		}
 		model.addAttribute("pageSize", 5);
-		model.addAttribute("size",searchResults.size());
+		model.addAttribute("size", searchResults.size());
 		model.addAttribute("pageIndex", pageIndex);
 		model.addAttribute("totalRecord", total);
 		return "empList";
 	}
-	
+
 	@RequestMapping(value = { "/orderSearch" })
 	public String orderSearch(@RequestParam(name = "search") String searchName, Model model,
 			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
 		List<Order> orders = orderDAO.listOfOrder();
 		List<Order> list = new ArrayList<>();
-		for(Order o : orders) {
-			if(o.getCustName().contains(searchName)) {
+		for (Order o : orders) {
+			if (o.getCustName().contains(searchName)) {
 				list.add(o);
 			}
 		}
@@ -286,7 +334,7 @@ public class AdminController {
 			error = "No emp found";
 			model.addAttribute("error", error);
 		} else {
-			message = "Found " + list.size() + " Orders made by customer "+searchName;
+			message = "Found " + list.size() + " Orders made by customer " + searchName;
 			model.addAttribute("message", message);
 			model.addAttribute("list", infos);
 		}
@@ -294,12 +342,13 @@ public class AdminController {
 		model.addAttribute("totalRecords", list.size());
 		return "orderList";
 	}
-	
-	public List<OrderInfo> toInfo(List<Order> orders){
+
+	public List<OrderInfo> toInfo(List<Order> orders) {
 		List<OrderInfo> infos = new ArrayList<>();
-		for(Order o : orders) {
+		for (Order o : orders) {
 			OrderInfo info = new OrderInfo(o.getId(), o.getCustName(), o.getEmail(), o.getPhone(),
-					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),o.isConfirmed());
+					o.getDeliverAddress(), o.getTotalPrice(), o.getOrderStatus(), o.isEnabled(), o.getConCode(),
+					o.isConfirmed());
 			infos.add(info);
 		}
 		return infos;
