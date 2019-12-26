@@ -225,14 +225,20 @@ public class OrderDAO extends JdbcDaoSupport {
 		int id = this.getMaxOrderId();
 		Order order = findOrder(id);
 		String message = "";
-		if(conCode.equals(order.getConCode())) {
+		if (conCode.equals(order.getConCode())) {
 			String sql = "UPDATE Orders SET confirmed = 1 WHERE id = ?";
 			this.getJdbcTemplate().update(sql, id);
 			message = "Confirmed completed";
-		}
-		else
+		} else
 			message = "Incorrect confirmation code";
 		return message;
 	}
-	
+
+	public int cancelOrder() {
+		int id = this.getMaxOrderId();
+		String sql = "UPDATE Orders SET enabled = 0 WHERE id = ?";
+		int i = this.getJdbcTemplate().update(sql, id);
+		return i;
+	}
+
 }

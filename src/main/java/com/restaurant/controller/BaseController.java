@@ -303,10 +303,10 @@ public class BaseController {
 
 		return "redirect:/confirmPurchaseForm";
 	}
-	
+
 	@RequestMapping(value = { "/confirmPurchaseForm" }, method = RequestMethod.GET)
 	public String completePurChaseForm(Model model) {
-		
+
 		return "confirmPurchase";
 	}
 
@@ -328,6 +328,20 @@ public class BaseController {
 		// Delete cart from session
 		Utils.removeCartInSession(request);
 		return "redirect:/shoppingCartFinalize";
+	}
+
+	@RequestMapping(value = { "/cancelOrder" })
+	public String cancelOrder(HttpServletRequest request, Model model) {
+		int i = orderDAO.cancelOrder();
+
+		ShoppingCart cartInfo = Utils.getCartInSession(request);
+
+		// store lastest order for finalization
+		Utils.storeLastOrderedCartInSession(request, cartInfo);
+
+		// Delete cart from session
+		Utils.removeCartInSession(request);
+		return "redirect:/productList";
 	}
 
 	public void sendSimpleEmail(OrderInfo order) {
