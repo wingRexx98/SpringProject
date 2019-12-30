@@ -68,9 +68,9 @@ public class OrderDetailInfo {
 
 	@Override
 	public String toString() {
-		String format1 = String.format("|%-30s|", "Item name: "+ this.getFoodName());
-		String format2 = String.format("|%-30s|", "Quantity: "+ this.getQuanity());
-		String format3 = String.format("|%-30s|", "Price based on quantity: "+ this.getQuantityPrice());
+		String format1 = String.format("|%-50s|", "Item name: "+ this.getFoodName());
+		String format2 = String.format("|%-50s|", "Quantity: "+ this.getQuanity());
+		String format3 = String.format("|%-50s|", "Price based on quantity: "+ this.getQuantityPrice());
 		String finalString = "\n"+ format1.concat(format2).concat(format3);
 		return finalString;
 	}

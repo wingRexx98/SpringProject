@@ -332,7 +332,7 @@ public class BaseController {
 
 	@RequestMapping(value = { "/cancelOrder" })
 	public String cancelOrder(HttpServletRequest request, Model model) {
-		int i = orderDAO.cancelOrder();
+		orderDAO.cancelOrder();
 
 		ShoppingCart cartInfo = Utils.getCartInSession(request);
 
@@ -352,7 +352,7 @@ public class BaseController {
 
 		message.setTo(order.getEmail());
 		message.setSubject("Japanese Restaurant");
-		message.setText("Hello, this is the receive for your order:\n " + order.toString()
+		message.setText("Hello, this is the receive for your order:\n " + order.toString2()
 				+ "\n\n This is the confirm code: " + o.getConCode());
 
 		// Send Message!

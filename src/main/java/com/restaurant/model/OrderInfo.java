@@ -131,8 +131,7 @@ public class OrderInfo {
 		super();
 	}
 
-	@Override
-	public String toString() {
+	public String toString2() {
 		String order = "Order number: " + this.getId() + "\nCustomer: " + this.getCustName() + "\nPhone  number: "
 				+ this.getPhone() + "\nDeliver to this address: " + this.getDeliverAddress() + "\nItems: ";
 		for (OrderDetailInfo detail : this.details) {

@@ -40,12 +40,11 @@
 								<option th:value="Done">Done</option>
 								<option th:value="Inprogress">Inprogress</option>
 								<option th:value="Cancel">Cancel</option>
-							</select>
-						</th:block>
-					</td>
+							</select></td>
 					<td><input sec:authorize="hasRole('ROLE_ADMIN')"
 						class="btn btn-outline-secondary btn-sm" type="submit"
 						value="Update"></td>
+					</th:block>
 				</tr>
 			</table>
 		</form>
