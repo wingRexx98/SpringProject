@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.restaurant.model.OrderInfo;
-import com.restaurant.util.MyConstants;
 
 @Controller
 public class EmailController {
@@ -29,7 +28,7 @@ public class EmailController {
 		// Create a Simple MailMessage.
 		SimpleMailMessage message = new SimpleMailMessage();
 
-		message.setTo(MyConstants.FRIEND_EMAIL);
+		message.setTo(order.getEmail());
 		message.setSubject("Japanese Restaurant");
 		message.setText("Hello, this is the receive for your order:\n " + order.toString());
 
@@ -41,7 +40,7 @@ public class EmailController {
 
 	@ResponseBody
 //	@RequestMapping("/sendAttachmentEmail")
-	public String sendAttachmentEmail() throws MessagingException {
+	public String sendAttachmentEmail(OrderInfo order) throws MessagingException {
 
 		MimeMessage message = emailSender.createMimeMessage();
 
@@ -49,7 +48,7 @@ public class EmailController {
 
 		MimeMessageHelper helper = new MimeMessageHelper(message, multipart);
 
-		helper.setTo(MyConstants.FRIEND_EMAIL);
+		helper.setTo(order.getEmail());
 		helper.setSubject("Test email with attachments");
 
 		helper.setText("Hello, Im testing email with attachments!");
@@ -72,7 +71,7 @@ public class EmailController {
 
 	@ResponseBody
 //	@RequestMapping("/sendHtmlEmail")
-	public String sendHtmlEmail() throws MessagingException {
+	public String sendHtmlEmail(OrderInfo order) throws MessagingException {
 
 		MimeMessage message = emailSender.createMimeMessage();
 
@@ -85,7 +84,7 @@ public class EmailController {
 
 		message.setContent(htmlMsg, "text/html");
 
-		helper.setTo(MyConstants.FRIEND_EMAIL);
+		helper.setTo(order.getEmail());
 
 		helper.setSubject("Test send HTML email");
 
