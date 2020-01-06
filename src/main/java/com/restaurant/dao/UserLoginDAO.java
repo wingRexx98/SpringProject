@@ -46,6 +46,7 @@ public class UserLoginDAO extends JdbcDaoSupport {
 		}
 	}
 
+	// Update the emp account
 	public int updateAccountByEmp(EmpForm form, int id) {
 		int check = 0;
 		UserLogin loginInfo = new UserLogin();

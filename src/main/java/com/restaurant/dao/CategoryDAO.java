@@ -20,12 +20,18 @@ import com.restaurant.util.SQLCommands;
 public class CategoryDAO extends JdbcDaoSupport {
 
 	Category category = null;
-	
+
 	@Autowired
 	public CategoryDAO(DataSource dataSource) {
 		this.setDataSource(dataSource);
 	}
 
+	/**
+	 * Retrieve all the category from db
+	 * 
+	 * @return
+	 * @throws DataAccessException
+	 */
 	public List<Category> getCategory() throws DataAccessException {
 		List<Category> cates = new ArrayList<Category>();
 
@@ -35,11 +41,18 @@ public class CategoryDAO extends JdbcDaoSupport {
 		cates = this.getJdbcTemplate().query(sql, params, mapper);
 		return cates;
 	}
-	
+
+	/**
+	 * Search category
+	 * 
+	 * @param id
+	 * @return
+	 * @throws DataAccessException
+	 */
 	public Category findCategory(int id) throws DataAccessException {
 		Category cate = null;
 		String sql = SQLCommands.ALL_CATE + " AND id = ?";
-		Object[] params = new Object[] {id};
+		Object[] params = new Object[] { id };
 		CategoryMapper mapper = new CategoryMapper();
 		cate = this.getJdbcTemplate().queryForObject(sql, params, mapper);
 		return cate;

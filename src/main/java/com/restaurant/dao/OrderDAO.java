@@ -37,6 +37,49 @@ public class OrderDAO extends JdbcDaoSupport {
 	}
 
 	/**
+	 * Convert cart info into order info
+	 * 
+	 * @param cart
+	 * @return
+	 */
+	public Order toOrder(ShoppingCart cart) {
+		Order order = new Order();
+
+		Customer customer = cart.getCustomer();
+
+		int newOrderId = getMaxOrderId() + 1;
+		order.setId(newOrderId);
+		order.setCustName(customer.getCustName());
+		order.setEmail(customer.getEmail());
+		order.setPhone(customer.getPhone());
+		order.setDeliverAddress(customer.getAddress());
+		order.setTotalPrice(cart.getAmountTotal());
+		order.setOrderStatus("Not done");
+		order.setConCode(this.validationCodeGenerator());
+
+		return order;
+	}
+
+	/**
+	 * conver cart lin into order detail
+	 * 
+	 * @param line
+	 * @param newOrderId
+	 * @return
+	 */
+	public OrderDetail toDetail(ShoppingCartLine line, int newOrderId) {
+		OrderDetail detail = new OrderDetail();
+
+		detail.setOrderId(newOrderId);
+		detail.setQuantity(line.getQuantity());
+		detail.setQuantityPrice(line.getAmount());
+		FoodInfo food = line.getFood();
+		detail.setFoodId(food.getId());
+
+		return detail;
+	}
+
+	/**
 	 * Save the new customer first then save the new order then save the order
 	 * details
 	 * 
@@ -47,33 +90,20 @@ public class OrderDAO extends JdbcDaoSupport {
 	@Transactional
 	public int saveOrder(ShoppingCart cart) throws DataAccessException {
 		int status = 0;
-		int newOrderId = getMaxOrderId() + 1;
-		Customer customer = cart.getCustomer();
-		Order order = new Order();
-
-		order.setId(newOrderId);
-		order.setCustName(customer.getCustName());
-		order.setEmail(customer.getEmail());
-		order.setPhone(customer.getPhone());
-		order.setDeliverAddress(customer.getAddress());
-		order.setTotalPrice(cart.getAmountTotal());
-		order.setOrderStatus("Not done");
-		order.setConCode(this.validationCodeGenerator());
+		Order order = this.toOrder(cart);
 
 		String sql = "Insert into Orders VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?,0)";
+
 		status = this.getJdbcTemplate().update(sql, order.getId(), order.getCustName(), order.getEmail(),
 				order.getPhone(), order.getDeliverAddress(), order.getTotalPrice(), order.getOrderStatus(),
 				order.getConCode());
 
 		List<ShoppingCartLine> lines = cart.getCartLines();
 		sql = "Insert into order_detail VALUES (?, ?, ?, ?)";
+
 		for (ShoppingCartLine line : lines) {
-			OrderDetail detail = new OrderDetail();
-			detail.setOrderId(newOrderId);
-			detail.setQuantity(line.getQuantity());
-			detail.setQuantityPrice(line.getAmount());
-			FoodInfo food = line.getFood();
-			detail.setFoodId(food.getId());
+
+			OrderDetail detail = this.toDetail(line, order.getId());
 
 			this.getJdbcTemplate().update(sql, detail.getOrderId(), detail.getFoodId(), detail.getQuantity(),
 					detail.getQuantityPrice());
@@ -114,6 +144,7 @@ public class OrderDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	// update order status
 	public int updateOrderStatus(OrderInfo order, int id) {
 		int check = 0;
 		String sql = "UPDATE Orders SET orderStatus = ? WHERE id = ?";
@@ -121,6 +152,7 @@ public class OrderDAO extends JdbcDaoSupport {
 		return check;
 	}
 
+	// find order by id
 	public Order findOrder(int id) {
 		Order order = null;
 		List<Order> list = listOfOrder();
@@ -134,6 +166,7 @@ public class OrderDAO extends JdbcDaoSupport {
 		return order;
 	}
 
+	// get specific order info
 	public OrderInfo getOrderInfo(int id) {
 		Order order = this.findOrder(id);
 		if (order != null) {
@@ -144,12 +177,15 @@ public class OrderDAO extends JdbcDaoSupport {
 		return null;
 	}
 
+	// get specific detail infos
 	public List<OrderDetailInfo> detailInfos(int orderId) {
 		String sql = "SELECT * FROM order_detail WHERE orderId = ?";
 		Object[] params = new Object[] { orderId };
 		OrderDetailMapper mapper = new OrderDetailMapper();
+
 		List<OrderDetail> list = this.getJdbcTemplate().query(sql, params, mapper);
 		List<OrderDetailInfo> infoList = new ArrayList<>();
+
 		for (OrderDetail d : list) {
 			Food food = foodDAO.findFood(d.getFoodId());
 			OrderDetailInfo info = new OrderDetailInfo(d.getFoodId(), food.getFoodName(), d.getQuantity(),
@@ -159,10 +195,12 @@ public class OrderDAO extends JdbcDaoSupport {
 		return infoList;
 	}
 
+	// Pagin the orders
 	public List<Order> pagingOrders(int pageIndex, int pageSize) {
 		List<Order> list = new ArrayList<>();
 		String sql = "{call pageOrderDevider(?,?)}";
 		Object[] params = new Object[] { pageIndex, pageSize };
+
 		OrderMapper mapper = new OrderMapper();
 		try {
 			list = this.getJdbcTemplate().query(sql, params, mapper);
@@ -172,11 +210,13 @@ public class OrderDAO extends JdbcDaoSupport {
 		}
 	}
 
+	// disable order
 	public void removeOrder(int id) {
 		String sql = "UPDATE Orders SET enabled = 0 where id = ?";
 		this.getJdbcTemplate().update(sql, id);
 	}
 
+	// convert order into order info
 	public OrderInfo toOrderInfo(ShoppingCart cart) {
 		OrderInfo info = new OrderInfo();
 		info.setId(this.getMaxOrderId());
@@ -201,6 +241,7 @@ public class OrderDAO extends JdbcDaoSupport {
 		return info;
 	}
 
+	// generate random number
 	public int randomNumbers() {
 		Random random = new Random();
 		int rand = 0;
@@ -212,6 +253,7 @@ public class OrderDAO extends JdbcDaoSupport {
 		return rand;
 	}
 
+	// generate validation code
 	public String validationCodeGenerator() {
 		String code = "";
 		for (int i = 0; i < 6; i++) {
@@ -221,6 +263,12 @@ public class OrderDAO extends JdbcDaoSupport {
 		return code;
 	}
 
+	/**
+	 * Confirm validation code to complete order
+	 * 
+	 * @param conCode
+	 * @return
+	 */
 	public String confirmPurchase(String conCode) {
 		int id = this.getMaxOrderId();
 		Order order = findOrder(id);
@@ -234,6 +282,11 @@ public class OrderDAO extends JdbcDaoSupport {
 		return message;
 	}
 
+	/**
+	 * Customer cancel order
+	 * 
+	 * @return
+	 */
 	public int cancelOrder() {
 		int id = this.getMaxOrderId();
 		String sql = "UPDATE Orders SET enabled = 0 WHERE id = ?";

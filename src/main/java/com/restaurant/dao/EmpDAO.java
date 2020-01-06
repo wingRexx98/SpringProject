@@ -27,9 +27,16 @@ public class EmpDAO extends JdbcDaoSupport {
 		this.setDataSource(dataSource);
 	}
 
-	public int saveEmp(EmpForm form) throws IOException {
-		int check = 0;
+	/**
+	 * From employee form into employee
+	 * 
+	 * @param form
+	 * @return
+	 * @throws IOException
+	 */
+	public Employee toEmployee(EmpForm form) throws IOException {
 		Employee emp = new Employee();
+
 		emp.setEmpName(form.getEmpName());
 		emp.setDob(form.getDob());
 		emp.setAddress(form.getAddress());
@@ -47,16 +54,44 @@ public class EmpDAO extends JdbcDaoSupport {
 			emp.setImage(null);
 		}
 
+		return emp;
+	}
+
+	/**
+	 * from emp form into user login
+	 * 
+	 * @param form
+	 * @return
+	 */
+	public UserLogin toUserLogin(EmpForm form) {
 		UserLogin loginInfo = new UserLogin();
+
 		loginInfo.setEmpId(this.maxEmpId() + 1);
+		loginInfo.setUserName(form.getUserName());
 		loginInfo.setEncryptedPassword(this.passwordEncoder(form.getEncryptedPassword()));
 		loginInfo.setActive(true);
 		loginInfo.setRoleId(form.getRoleId());
 
+		return loginInfo;
+	}
+
+	/**
+	 * Save emp into db
+	 * 
+	 * @param form
+	 * @return
+	 * @throws IOException
+	 */
+	public int saveEmp(EmpForm form) throws IOException {
+		int check = 0;
+
 		if (!validUserName(form.getUserName())) {
 			return check = 0;
 		}
-		loginInfo.setUserName(form.getUserName());
+
+		Employee emp = this.toEmployee(form);
+
+		UserLogin loginInfo = this.toUserLogin(form);
 
 		String sql = "insert into Employee (id, empName, dob, email, phone, address, hire_date,salary, image)"
 				+ " values(?,?,?,?,?,?,?,?,?)";
@@ -69,14 +104,17 @@ public class EmpDAO extends JdbcDaoSupport {
 		return check;
 	}
 
+	/**
+	 * Update emp info, username and password not included
+	 * 
+	 * @param form
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
 	public int updateEmpbyEmp(EmpForm form, int id) throws IOException {
 		int check = 0;
-		Employee emp = new Employee();
-		emp.setEmpName(form.getEmpName());
-		emp.setDob(form.getDob());
-		emp.setAddress(form.getAddress());
-		emp.setEmail(form.getEmail());
-		emp.setPhone(form.getPhone());
+		Employee emp = this.toEmployee(form);
 
 		if (form.getImage() != null) {
 			byte[] image = form.getImage().getBytes();
@@ -98,6 +136,13 @@ public class EmpDAO extends JdbcDaoSupport {
 		return check;
 	}
 
+	/**
+	 * Emp promotion
+	 * 
+	 * @param id
+	 * @return
+	 * @throws IOException
+	 */
 	public int updateEmpbyAdmin(int id) throws IOException {
 		int check = 0;
 		Employee emp = this.findEmp(id);
@@ -110,11 +155,21 @@ public class EmpDAO extends JdbcDaoSupport {
 		return check;
 	}
 
+	/**
+	 * Disable account
+	 * 
+	 * @param id
+	 */
 	public void deactivateAccount(int id) {
 		String sql = "UPDATE User_Login SET enabled =0 where empid = ?";
 		this.getJdbcTemplate().update(sql, id);
 	}
 
+	/**
+	 * Get all emps
+	 * 
+	 * @return
+	 */
 	public List<Employee> allEmp() {
 		List<Employee> list = new ArrayList<>();
 		String sql = "Select * from Employee";
@@ -125,6 +180,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * All emp with emp role
+	 * 
+	 * @return
+	 */
 	public List<Employee> allEmpWithEmpRole() {
 		List<Employee> list = new ArrayList<>();
 		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
@@ -137,6 +197,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * All emps with admin role
+	 * 
+	 * @return
+	 */
 	public List<Employee> allAdmin() {
 		List<Employee> list = new ArrayList<>();
 		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
@@ -149,6 +214,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * All emp
+	 * 
+	 * @return
+	 */
 	public List<Employee> allList() {
 		List<Employee> list = new ArrayList<>();
 		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
@@ -161,6 +231,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * All emp with disabled account
+	 * 
+	 * @return
+	 */
 	public List<Employee> disabledList() {
 		List<Employee> list = new ArrayList<>();
 		String sql = "SELECT e.id, e.empName, e.dob,e.email,e.phone,e.address,e.hire_date, e.salary, e.image "
@@ -173,6 +248,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * all login account
+	 * 
+	 * @return
+	 */
 	public List<UserLogin> allUserLogin() {
 		List<UserLogin> list = new ArrayList<>();
 		String sql = "Select * from User_Login";
@@ -183,6 +263,12 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * Validate new username
+	 * 
+	 * @param username
+	 * @return
+	 */
 	public boolean validUserName(String username) {
 		List<UserLogin> list = this.allUserLogin();
 		for (UserLogin u : list) {
@@ -193,6 +279,12 @@ public class EmpDAO extends JdbcDaoSupport {
 		return true;
 	}
 
+	/**
+	 * validate update Id
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public boolean validUpdateId(int id) {
 		List<UserLogin> list = this.allUserLogin();
 		for (UserLogin u : list) {
@@ -203,6 +295,11 @@ public class EmpDAO extends JdbcDaoSupport {
 		return true;
 	}
 
+	/**
+	 * Get the max id
+	 * 
+	 * @return
+	 */
 	public int maxEmpId() {
 		int id = 0;
 		List<Employee> list = this.allEmp();
@@ -214,11 +311,24 @@ public class EmpDAO extends JdbcDaoSupport {
 		return id;
 	}
 
+	/**
+	 * Encode the password
+	 * 
+	 * @param password
+	 * @return
+	 */
 	public String passwordEncoder(String password) {
 		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 		return bCryptPasswordEncoder.encode(password);
 	}
 
+	/**
+	 * paging the emp list
+	 * 
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 */
 	public List<Employee> employees(int pageIndex, int pageSize) {
 		List<Employee> list = new ArrayList<>();
 		String sql = "{CALL pageEmployeeDevider (?,?)}";
@@ -229,6 +339,12 @@ public class EmpDAO extends JdbcDaoSupport {
 		return list;
 	}
 
+	/**
+	 * Search emp by id
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Employee findEmp(int id) {
 		String sql = "Select * from Employee where id = ?";
 		Object[] params = new Object[] { id };
@@ -237,6 +353,12 @@ public class EmpDAO extends JdbcDaoSupport {
 		return emp;
 	}
 
+	/**
+	 * Search emp by name
+	 * 
+	 * @param username
+	 * @return
+	 */
 	public Employee findEmpByUsername(String username) {
 		String sql = "Select * from Employee e JOIN User_Login ul ON e.id = ul.empid AND ul.username = ?";
 		Object[] params = new Object[] { username };
@@ -244,4 +366,5 @@ public class EmpDAO extends JdbcDaoSupport {
 		Employee emp = this.getJdbcTemplate().queryForObject(sql, params, mapper);
 		return emp;
 	}
+
 }

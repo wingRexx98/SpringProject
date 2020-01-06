@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.restaurant.dao.EmpDAO;
 import com.restaurant.dao.OrderDAO;
 import com.restaurant.dao.UserLoginDAO;
-import com.restaurant.dao.UserRoleDAO;
 import com.restaurant.form.EmpForm;
 import com.restaurant.form.FoodForm;
 import com.restaurant.model.Employee;
@@ -30,7 +29,6 @@ import com.restaurant.model.Order;
 import com.restaurant.model.OrderDetailInfo;
 import com.restaurant.model.OrderInfo;
 import com.restaurant.model.UserLogin;
-import com.restaurant.model.User_Role;
 
 @Controller
 public class AdminController {
@@ -40,9 +38,6 @@ public class AdminController {
 
 	@Autowired
 	private EmpDAO empDAO;
-
-	@Autowired
-	private UserRoleDAO roleDAO;
 
 	@Autowired
 	private UserLoginDAO loginDAO;
@@ -60,7 +55,14 @@ public class AdminController {
 		}
 	}
 
-	// Order list
+	/**
+	 * Show list of all order
+	 * 
+	 * @param model
+	 * @param pageIndex
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping({ "/orderList" })
 	private String orderList(Model model, //
 			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
@@ -80,6 +82,17 @@ public class AdminController {
 		return "orderList";
 	}
 
+	/**
+	 * Update the order's status
+	 * 
+	 * @param model
+	 * @param order
+	 * @param id
+	 * @param principal
+	 * @return
+	 * @throws DataAccessException
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "/updateOrder", method = RequestMethod.POST)
 	public String updateProduct(Model model, @ModelAttribute("orderInfo") OrderInfo order,
 			@RequestParam(name = "id") int id, Principal principal) throws DataAccessException, IOException {
@@ -87,7 +100,14 @@ public class AdminController {
 		return "redirect:/orderList";
 	}
 
-	// Order detail view
+	/**
+	 * Get specific detail on an order
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = { "/orderView" }, method = RequestMethod.GET)
 	public String orderView(Model model, @RequestParam(name = "id") int id, Principal principal) {
 		if (id == 0) {
@@ -101,7 +121,14 @@ public class AdminController {
 		return "orderView";
 	}
 
-	// Order remove
+	/**
+	 * Disable a order
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = { "/removeOrder" }, method = RequestMethod.GET)
 	public String removeOrder(Model model, @RequestParam(name = "id") int id, Principal principal) {
 		if (id == 0) {
@@ -119,12 +146,25 @@ public class AdminController {
 		return "login";
 	}
 
+	/**
+	 * Logout
+	 * 
+	 * @param model
+	 * @return
+	 */
 	@RequestMapping(value = "/logoutSuccessful", method = RequestMethod.GET)
 	public String logoutSuccessfulPage(Model model) {
 		model.addAttribute("title", "Logout");
 		return "logoutSuccessfulPage";
 	}
 
+	/**
+	 * Get account info
+	 * 
+	 * @param model
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = { "/accountInfo" }, method = RequestMethod.GET)
 	public String accountInfo(Model model, Principal principal) {
 
@@ -138,82 +178,52 @@ public class AdminController {
 
 		return "accountInfo";
 	}
-
-	////////////////////////// EMP
-
-	@RequestMapping(value = { "/addEmployee" }, method = RequestMethod.GET)
-	public String addEmployee(Model model, Principal principal) {
-		EmpForm form = new EmpForm();
-		List<User_Role> roles = roleDAO.allRole();
-		model.addAttribute("empForm", form);
-		model.addAttribute("roles", roles);
-		return "addEmployee";
+	
+	/**
+	 * Form to update username and password
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = { "/editUsername" }, method = RequestMethod.GET)
+	public String changeUnamePass(Model model, @RequestParam(name = "id") int id, Principal principal) {
+		UserLogin loginInfo = loginDAO.findAccountByEmp(id);
+		model.addAttribute("userLogin", loginInfo);
+		return "editUsername";
 	}
 
-	// Emp save
-	@RequestMapping(value = { "/saveEmpInfo" }, method = RequestMethod.POST)
-	public String saveProductHandler(Model model, @ModelAttribute("empForm") EmpForm form)
-			throws DataAccessException, IOException {
-		String errorMessage;
-		int i = empDAO.saveEmp(form);
-		if (i == 0) {
-			errorMessage = "Something went wrong, Most likely the user login name already exist";
-			List<User_Role> roles = roleDAO.allRole();
-			model.addAttribute("categoryList", roles);
-			model.addAttribute("error", errorMessage);
-			return "addEmployee";
+	/**
+	 * save changes
+	 * 
+	 * @param model
+	 * @param form
+	 * @param id
+	 * @param principal
+	 * @return
+	 */
+	@RequestMapping(value = { "/updateUsername" }, method = RequestMethod.POST)
+	public String change(Model model, @ModelAttribute("empForm") EmpForm form, @RequestParam(name = "id") int id,
+			Principal principal) {
+		int check = 0;
+		check = loginDAO.updateAccountByEmp(form, id);
+		if (check == 0) {
+			UserLogin loginInfo = loginDAO.findAccountByEmp(id);
+			model.addAttribute("userLogin", loginInfo);
+			return "redirect:/editUsername";
 		}
-		return "redirect:/";
+		return "redirect:/accountInfo";
 	}
 
-	// Emp list
-	@RequestMapping(value = { "/empList" })
-	public String listOfEmployees(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
-			Principal principal) {
-		int pageSize = 5;
-		int total = empDAO.allEmpWithEmpRole().size();
-		List<Employee> emps = empDAO.employees(pageIndex, pageSize);
-		model.addAttribute("list", emps);
-		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("totalRecord", total);
-		model.addAttribute("size", total);
-		return "empList";
-	}
-
-	// Admin list
-	@RequestMapping(value = { "/adminList" })
-	public String listOfAdmins(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
-			Principal principal) {
-
-		int total = empDAO.allAdmin().size();
-		int pageSize = total;
-		List<Employee> emps = empDAO.allAdmin();
-		model.addAttribute("list", emps);
-		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("totalRecord", total);
-		model.addAttribute("size", total);
-		return "empList";
-	}
-
-	// all list
-	@RequestMapping(value = { "/list" })
-	public String allEmployee(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
-			Principal principal) {
-
-		int total = empDAO.allList().size();
-		int pageSize = total;
-		List<Employee> emps = empDAO.allList();
-		model.addAttribute("list", emps);
-		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("pageSize", pageSize);
-		model.addAttribute("totalRecord", total);
-		model.addAttribute("size", total);
-		return "empList";
-	}
-
-	// all list
+	/**
+	 * List all workers with disabled accounts
+	 * 
+	 * @param model
+	 * @param pageIndex
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = { "/disabledList" })
 	public String allDisabledEmployee(Model model, @RequestParam(value = "page", defaultValue = "1") int pageIndex,
 			Principal principal) {
@@ -229,6 +239,15 @@ public class AdminController {
 		return "empList";
 	}
 
+	/**
+	 * Display emp avatar
+	 * 
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @param id
+	 * @throws IOException
+	 */
 	@RequestMapping(value = { "/empImage" }, method = RequestMethod.GET)
 	public void productImage(HttpServletRequest request, HttpServletResponse response, Model model,
 			@RequestParam(name = "id") int id) throws IOException {
@@ -243,80 +262,30 @@ public class AdminController {
 		response.getOutputStream().close();
 	}
 
+	/**
+	 * Promote emp to admin
+	 * 
+	 * @param model
+	 * @param id
+	 * @param principal
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = { "/promoteEmp" })
 	public String promoteEmp(Model model, @RequestParam(name = "id") int id, Principal principal) throws IOException {
 		empDAO.updateEmpbyAdmin(id);
 		return "redirect:/empList";
 	}
 
-	@RequestMapping(value = { "/editAccount" }, method = RequestMethod.GET)
-	public String editEmp(Model model, @RequestParam(name = "id") int id, Principal principal) {
-		Employee emp = empDAO.findEmp(id);
-		model.addAttribute("employee", emp);
-		return "editAccount";
-	}
-
-	@RequestMapping(value = { "/updateAccount" }, method = RequestMethod.POST)
-	public String updateEmp(Model model, @ModelAttribute("empForm") EmpForm form, @RequestParam(name = "id") int id,
-			Principal principal) throws IOException {
-		int check = 0;
-		check = empDAO.updateEmpbyEmp(form, id);
-		if (check == 0) {
-			Employee emp = empDAO.findEmp(id);
-			model.addAttribute("employee", emp);
-			return "redirect:/editAccount";
-		}
-		return "redirect:/empList";
-	}
-
-	@RequestMapping(value = { "/editUsername" }, method = RequestMethod.GET)
-	public String changeUnamePass(Model model, @RequestParam(name = "id") int id, Principal principal) {
-		UserLogin loginInfo = loginDAO.findAccountByEmp(id);
-		model.addAttribute("userLogin", loginInfo);
-		return "editUsername";
-	}
-
-	@RequestMapping(value = { "/updateUsername" }, method = RequestMethod.POST)
-	public String change(Model model, @ModelAttribute("empForm") EmpForm form, @RequestParam(name = "id") int id,
-			Principal principal) {
-		int check = 0;
-		check = loginDAO.updateAccountByEmp(form, id);
-		if (check == 0) {
-			UserLogin loginInfo = loginDAO.findAccountByEmp(id);
-			model.addAttribute("userLogin", loginInfo);
-			return "redirect:/editUsername";
-		}
-		return "redirect:/accountInfo";
-	}
-
-	@RequestMapping(value = { "/empSearch" })
-	public String empSearch(@RequestParam(name = "search") String searchName, Model model,
-			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
-		List<Employee> emps = empDAO.allEmpWithEmpRole();
-		int total = emps.size();
-		List<Employee> searchResults = new ArrayList<>();
-		for (Employee e : emps) {
-			if (e.getEmpName().contains(searchName)) {
-				searchResults.add(e);
-			}
-		}
-		String error = null;
-		String message = null;
-		if (searchResults.isEmpty() || searchResults == null) {
-			error = "No emp found";
-			model.addAttribute("error", error);
-		} else {
-			message = "Found " + searchResults.size() + " Employees";
-			model.addAttribute("message", message);
-			model.addAttribute("list", searchResults);
-		}
-		model.addAttribute("pageSize", 5);
-		model.addAttribute("size", searchResults.size());
-		model.addAttribute("pageIndex", pageIndex);
-		model.addAttribute("totalRecord", total);
-		return "empList";
-	}
-
+	/**
+	 * Search order based on customer
+	 * 
+	 * @param searchName
+	 * @param model
+	 * @param pageIndex
+	 * @param principal
+	 * @return
+	 */
 	@RequestMapping(value = { "/orderSearch" })
 	public String orderSearch(@RequestParam(name = "search") String searchName, Model model,
 			@RequestParam(value = "page", defaultValue = "1") int pageIndex, Principal principal) {
@@ -343,6 +312,12 @@ public class AdminController {
 		return "orderList";
 	}
 
+	/**
+	 * Transfer list of orders into list of OrderInfos
+	 * 
+	 * @param orders
+	 * @return
+	 */
 	public List<OrderInfo> toInfo(List<Order> orders) {
 		List<OrderInfo> infos = new ArrayList<>();
 		for (Order o : orders) {
