@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.restaurant.mapper.IngedientMapper;
 import com.restaurant.mapper.Product_IngridientMapper;
 import com.restaurant.model.Ingedients;
+import com.restaurant.model.OrderDetail;
 import com.restaurant.model.Product_Ingridient;
 
 @Repository
@@ -24,6 +25,11 @@ public class IngridientDAO extends JdbcDaoSupport {
 		this.setDataSource(dataSource);
 	}
 
+	/**
+	 * List of all ingridients
+	 * 
+	 * @return
+	 */
 	public List<Ingedients> allIngri() {
 		List<Ingedients> list = new ArrayList<Ingedients>();
 
@@ -38,6 +44,12 @@ public class IngridientDAO extends JdbcDaoSupport {
 		}
 	}
 
+	/**
+	 * List all ingridients need to make a dish
+	 * 
+	 * @param foodId
+	 * @return
+	 */
 	public List<Ingedients> allIngriForFood(int foodId) {
 		List<Ingedients> list = new ArrayList<Ingedients>();
 		String sql = "Select * from Ingedients where id IN "
@@ -59,10 +71,21 @@ public class IngridientDAO extends JdbcDaoSupport {
 	 * @param id
 	 * @return
 	 */
-	public int useIngridient(int quantity, int id) {
+	public String useIngridient(OrderDetail detail) {
 		String sql = " Update Ingedients Set stockQuantity = stockQuantity - ? Where id = ?";
-		int status = this.getJdbcTemplate().update(sql, quantity, id);
-		return status;
+		List<Ingedients> list = this.allIngriForFood(detail.getFoodId());
+		String message = "No problem";
+		for (Ingedients ing : list) {
+			int quantity = this.getTotalIngridientUsedForOrder(ing.getId(), detail);
+			if (ing.getStockQuantity() < quantity) {
+				message = "Not enough: " + ing.getName();
+				System.out.println(message);
+				break;
+			} else {
+				this.getJdbcTemplate().update(sql, quantity, ing.getId());
+			}
+		}
+		return message;
 	}
 
 	/**
@@ -76,19 +99,6 @@ public class IngridientDAO extends JdbcDaoSupport {
 		this.getJdbcTemplate().update(sql, id);
 	}
 
-	public void reUseIngridient(int quantity, int id) {
-		List<Ingedients> list = new ArrayList<>();
-
-		String sql = "Select * from Ingedients where id IN "
-				+ "( Select ingreId from Product_Ingridient where foodId IN "
-				+ "(Select foodId from OrderDetail where orderId IN "
-				+ "( Select id from Orders where orderStatus = 'Cancel')))";
-		Object[] params = new Object[] {};
-		IngedientMapper mapper = new IngedientMapper();
-		list = this.getJdbcTemplate().query(sql, params, mapper);
-
-	}
-
 	/**
 	 * Get the quantity of 1 ingridient used for a product in 1 order detail
 	 * 
@@ -97,14 +107,28 @@ public class IngridientDAO extends JdbcDaoSupport {
 	 * @param productQuantity
 	 * @return
 	 */
-	public int getTotalIngridientUsedForOrder(int id, int foodId, int productQuantity) {
+	public int getTotalIngridientUsedForOrder(int id, OrderDetail detail) {
 		int i = 0;
 		String sql = "Select * from Product_Ingridient where ingreId = ? AND foodId = ?";
-		Object[] params = new Object[] { id, foodId };
+		Object[] params = new Object[] { id, detail.getFoodId() };
 		Product_IngridientMapper mapper = new Product_IngridientMapper();
 		Product_Ingridient pi = this.getJdbcTemplate().queryForObject(sql, params, mapper);
-		i = pi.getQuantity() * productQuantity;
+		i = pi.getQuantity() * detail.getQuantity();
 		return i;
 	}
 
+	/**
+	 * Return ingridients that were not used due to order being canceled back into
+	 * stock
+	 * 
+	 * @param detail
+	 */
+	public void returnIngridient(OrderDetail detail) {
+		String sql = " Update Ingedients Set stockQuantity = stockQuantity + ? Where id = ?";
+		List<Ingedients> list = this.allIngriForFood(detail.getFoodId());
+		for (Ingedients ing : list) {
+			int quantity = this.getTotalIngridientUsedForOrder(ing.getId(), detail);
+			this.getJdbcTemplate().update(sql, quantity, ing.getId());
+		}
+	}
 }

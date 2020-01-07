@@ -32,6 +32,9 @@ public class OrderDAO extends JdbcDaoSupport {
 	private FoodDAO foodDAO;
 
 	@Autowired
+	private IngridientDAO ingDAO;
+
+	@Autowired
 	public OrderDAO(DataSource dataSource) {
 		this.setDataSource(dataSource);
 	}
@@ -107,6 +110,7 @@ public class OrderDAO extends JdbcDaoSupport {
 
 			this.getJdbcTemplate().update(sql, detail.getOrderId(), detail.getFoodId(), detail.getQuantity(),
 					detail.getQuantityPrice());
+			ingDAO.useIngridient(detail);
 		}
 
 		return status;
@@ -179,11 +183,7 @@ public class OrderDAO extends JdbcDaoSupport {
 
 	// get specific detail infos
 	public List<OrderDetailInfo> detailInfos(int orderId) {
-		String sql = "SELECT * FROM order_detail WHERE orderId = ?";
-		Object[] params = new Object[] { orderId };
-		OrderDetailMapper mapper = new OrderDetailMapper();
-
-		List<OrderDetail> list = this.getJdbcTemplate().query(sql, params, mapper);
+		List<OrderDetail> list = this.detailOfOrder(orderId);
 		List<OrderDetailInfo> infoList = new ArrayList<>();
 
 		for (OrderDetail d : list) {
@@ -291,7 +291,22 @@ public class OrderDAO extends JdbcDaoSupport {
 		int id = this.getMaxOrderId();
 		String sql = "UPDATE Orders SET enabled = 0, orderStatus = 'Cancel' WHERE id = ?";
 		int i = this.getJdbcTemplate().update(sql, id);
+
+		List<OrderDetail> list = this.detailOfOrder(id);
+		for (OrderDetail detail : list) {
+			ingDAO.returnIngridient(detail);
+		}
 		return i;
+	}
+
+	public List<OrderDetail> detailOfOrder(int id) {
+		String sql = "SELECT * FROM order_detail WHERE orderId = ?";
+		Object[] params = new Object[] { id };
+		OrderDetailMapper mapper = new OrderDetailMapper();
+
+		List<OrderDetail> list = this.getJdbcTemplate().query(sql, params, mapper);
+
+		return list;
 	}
 
 }
