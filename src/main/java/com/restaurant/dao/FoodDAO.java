@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.restaurant.model.Food;
 import com.restaurant.model.FoodInfo;
+import com.restaurant.model.Ingedients;
 import com.restaurant.form.FoodForm;
 import com.restaurant.mapper.FoodMapper;
 import com.restaurant.util.SQLCommands;
@@ -28,6 +29,9 @@ public class FoodDAO extends JdbcDaoSupport {
 	public FoodDAO(DataSource dataSource) {
 		this.setDataSource(dataSource);
 	}
+	
+	@Autowired
+	public IngridientDAO ingDAO;
 
 	/**
 	 * validate food info
@@ -194,7 +198,8 @@ public class FoodDAO extends JdbcDaoSupport {
 	public FoodInfo findFoodInfo(int id) {
 		Food food = this.findFood(id);
 		if (food != null) {
-			FoodInfo info = new FoodInfo(food.getId(), food.getFoodName(), food.getPrice());
+			List<Ingedients> list = ingDAO.allIngriForFood(id);
+			FoodInfo info = new FoodInfo(food.getId(), food.getFoodName(), food.getPrice(), list);
 			return info;
 		}
 		return null;

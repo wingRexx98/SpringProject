@@ -1,5 +1,7 @@
 package com.restaurant.model;
 
+import java.util.List;
+
 public class FoodInfo {
 
 	private int id;
@@ -7,6 +9,8 @@ public class FoodInfo {
 	private String foodName;
 
 	private double price;
+
+	private List<Ingedients> listOfInge;
 
 	public int getId() {
 		return id;
@@ -32,6 +36,13 @@ public class FoodInfo {
 		this.price = price;
 	}
 
+	public List<Ingedients> getListOfInge() {
+		return listOfInge;
+	}
+
+	public void setListOfInge(List<Ingedients> listOfInge) {
+		this.listOfInge = listOfInge;
+	}
 
 	public FoodInfo(Food food) {
 		super();
@@ -39,12 +50,13 @@ public class FoodInfo {
 		this.foodName = food.getFoodName();
 		this.price = food.getPrice();
 	}
-	
-	public FoodInfo(int id, String foodName, double price) {
+
+	public FoodInfo(int id, String foodName, double price, List<Ingedients> list) {
 		super();
 		this.id = id;
 		this.foodName = foodName;
 		this.price = price;
+		this.listOfInge = list;
 	}
 
 	public FoodInfo() {
