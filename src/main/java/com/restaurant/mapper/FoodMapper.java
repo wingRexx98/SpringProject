@@ -19,13 +19,11 @@ public class FoodMapper implements RowMapper<Food> {
 
 		double price = rs.getDouble("price");
 
-		String ingredients = rs.getString("ingredients");
-
 		byte[] image = rs.getBytes("image");
 
 		boolean enabled = rs.getBoolean("enabled");
 
-		return new Food(id, cateID, foodName, price, ingredients, image, enabled);
+		return new Food(id, cateID, foodName, price, image, enabled);
 
 	}
 

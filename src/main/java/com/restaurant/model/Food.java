@@ -17,8 +17,6 @@ public class Food implements Serializable {
 
 	private double price;
 
-	private String ingredients;
-
 	private byte[] image;
 
 	private boolean enabled;
@@ -63,14 +61,6 @@ public class Food implements Serializable {
 		this.price = price;
 	}
 
-	public String getIngredients() {
-		return ingredients;
-	}
-
-	public void setIngredients(String ingredients) {
-		this.ingredients = ingredients;
-	}
-
 	public byte[] getImage() {
 		return image;
 	}
@@ -83,13 +73,12 @@ public class Food implements Serializable {
 		return serialVersionUID;
 	}
 
-	public Food(int id, int cateID, String foodName, double price, String ingredients, byte[] image, boolean enabled) {
+	public Food(int id, int cateID, String foodName, double price, byte[] image, boolean enabled) {
 		super();
 		this.id = id;
 		this.cateID = cateID;
 		this.foodName = foodName;
 		this.price = price;
-		this.ingredients = ingredients;
 		this.image = image;
 		this.enabled = enabled;
 	}
@@ -101,7 +90,7 @@ public class Food implements Serializable {
 	@Override
 	public String toString() {
 		return this.id+ "|cateID : " + this.cateID + "	|foodName: " + this.foodName + "	|price: " + this.price
-				+ "	|ingredients: " + this.ingredients;
+				+ "	|ingredients: " /*+ this.ingredients*/;
 	}
 
 }

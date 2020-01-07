@@ -64,7 +64,6 @@ public class FoodDAO extends JdbcDaoSupport {
 		food.setCateID(foodForm.getCateID());
 		food.setFoodName(foodForm.getFoodName());
 		food.setPrice(foodForm.getPrice());
-		food.setIngredients(foodForm.getIngredients());
 
 		if (foodForm.getImage() != null) {
 			// images
@@ -99,7 +98,7 @@ public class FoodDAO extends JdbcDaoSupport {
 
 		String sql = SQLCommands.ADD_FOOD;
 		status = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(),
-				food.getIngredients(), food.getImage());
+				food.getImage());
 		return status;
 	}
 
@@ -122,12 +121,11 @@ public class FoodDAO extends JdbcDaoSupport {
 		}
 		if (food.getImage() == null) {
 			String sql = SQLCommands.UPDATE_FOOD_WITHOUT_IMAGE;
-			i = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(),
-					food.getIngredients(), id);
+			i = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(), id);
 		} else {
 			String sql = SQLCommands.UPDATE_FOOD_WITH_IMAGE;
 			i = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(),
-					food.getIngredients(), food.getImage(), id);
+					food.getImage(), id);
 		}
 		return i;
 	}

@@ -289,7 +289,7 @@ public class OrderDAO extends JdbcDaoSupport {
 	 */
 	public int cancelOrder() {
 		int id = this.getMaxOrderId();
-		String sql = "UPDATE Orders SET enabled = 0 WHERE id = ?";
+		String sql = "UPDATE Orders SET enabled = 0, orderStatus = 'Cancel' WHERE id = ?";
 		int i = this.getJdbcTemplate().update(sql, id);
 		return i;
 	}
