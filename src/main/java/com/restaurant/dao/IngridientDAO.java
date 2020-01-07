@@ -131,4 +131,23 @@ public class IngridientDAO extends JdbcDaoSupport {
 			this.getJdbcTemplate().update(sql, quantity, ing.getId());
 		}
 	}
+
+	/**
+	 * Get the return list from checkbox to convert into list of Ingedients
+	 * 
+	 * @param listOfId
+	 * @return
+	 */
+	public List<Ingedients> convertIntoIngedients(List<Integer> listOfId) {
+		List<Ingedients> list = this.allIngri();
+		List<Ingedients> found = new ArrayList<>();
+		for (Ingedients ing : list) {
+			for (Integer i : listOfId) {
+				if (ing.getId() == i) {
+					found.add(ing);
+				}
+			}
+		}
+		return found;
+	}
 }
