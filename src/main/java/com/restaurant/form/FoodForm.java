@@ -1,19 +1,23 @@
 package com.restaurant.form;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import com.restaurant.model.Food;
+
 public class FoodForm {
-	
+
 	private int cateID;
 
 	private String foodName;
 
 	private double price;
 
-	private String ingredients;
+	private List<Integer> ingredients;
 
 	// Upload file.
-    private MultipartFile image;
+	private MultipartFile image;
 
 	public int getCateID() {
 		return cateID;
@@ -39,11 +43,11 @@ public class FoodForm {
 		this.price = price;
 	}
 
-	public String getIngredients() {
+	public List<Integer> getIngredients() {
 		return ingredients;
 	}
 
-	public void setIngredients(String ingredients) {
+	public void setIngredients(List<Integer> ingredients) {
 		this.ingredients = ingredients;
 	}
 
@@ -55,7 +59,7 @@ public class FoodForm {
 		this.image = image;
 	}
 
-	public FoodForm(int cateID, String foodName, double price, String ingredients, MultipartFile image) {
+	public FoodForm(int cateID, String foodName, double price, List<Integer> ingredients, MultipartFile image) {
 		super();
 		this.cateID = cateID;
 		this.foodName = foodName;
@@ -63,9 +67,16 @@ public class FoodForm {
 		this.ingredients = ingredients;
 		this.image = image;
 	}
+	
+	public FoodForm(Food food, List<Integer> ingredients) {
+		this.cateID = food.getCateID();
+		this.foodName = food.getFoodName();
+		this.price = food.getPrice();
+		this.ingredients = ingredients;
+	}
 
 	public FoodForm() {
 		super();
 	}
-	
+
 }

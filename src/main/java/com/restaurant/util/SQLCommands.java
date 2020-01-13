@@ -16,11 +16,11 @@ public class SQLCommands {
 	public static final String FIND_FOOD = "SELECT * FROM Food WHERE id = ? AND enabled = 1";
 	
 
-	public static final String ADD_FOOD = "INSERT INTO Food(cateId, foodName, price, ingredients, image, enabled) VALUES (?, ?, ?, ?, ?, 1)";
+	public static final String ADD_FOOD = "INSERT INTO Food(cateId, foodName, price, image, enabled) VALUES (?, ?, ?, ?, 1)";
 
-	public static final String UPDATE_FOOD_WITH_IMAGE = "UPDATE Food SET cateId = ?,foodName = ?,price = ?,ingredients = ?, image =? WHERE id =?";
+	public static final String UPDATE_FOOD_WITH_IMAGE = "UPDATE Food SET cateId = ?,foodName = ?,price = ?, image =? WHERE id =?";
 	
-	public static final String UPDATE_FOOD_WITHOUT_IMAGE = "UPDATE Food SET cateId = ?,foodName = ?,price = ?,ingredients = ? WHERE id =?";
+	public static final String UPDATE_FOOD_WITHOUT_IMAGE = "UPDATE Food SET cateId = ?,foodName = ?,price = ? WHERE id =?";
 
 	public static final String REMOVE_FOOD = "UPDATE Food SET enabled = 0 WHERE id = ?";
 	

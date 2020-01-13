@@ -13,7 +13,7 @@
 		<div class="page-title">Edit Food/Product</div>
 		<div th:if="${error!= null}" class="error-message" th:utext="${error}"></div>
 		<br />
-		<form th:action="@{/updateProduct}" th:object="${food}" method="POST"
+		<form th:action="@{/updateProduct}" th:object="${foodForm}" method="POST"
 			enctype="multipart/form-data">
 			<table style="text-align: left;">
 				<tr>
@@ -39,8 +39,15 @@
 				</tr>
 				<tr>
 					<td>Ingredients *</td>
-					<td><input th:field="*{ingredients}" type="text"
-						required="required" /></td>
+					<td><ul>
+							<li th:each="ingedients : ${list}">
+								<div class="checkbox">
+									<input type="checkbox" th:field="*{ingredients}"
+										th:value="${ingedients.id}"><span
+										th:utext="${ingedients.name}"
+										th:checked="${listChecked.contains(ingedients.id)}">..</span>
+								</div>
+						</ul></td>
 
 				</tr>
 				<tr>
@@ -49,7 +56,7 @@
 					<td></td>
 				</tr>
 				<tr>
-					<td><input type="hidden" th:field="*{id}" /></td>
+					<td><input type="hidden" th:field="${food.id}" /></td>
 				</tr>
 				<tr>
 					<td><input th:href="@{|/editProduct?id=${food.id}|}"

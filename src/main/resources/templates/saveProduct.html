@@ -24,7 +24,7 @@
 			</tr>
 			<tr>
 				<td>Food Category *</td>
-				<td><select th:field="*{cateID}" >
+				<td><select th:field="*{cateID}">
 						<option th:each="category : ${categoryList}"
 							th:value="${category.id}" th:utext="${category.name}" />
 				</select></td>
@@ -37,10 +37,15 @@
 
 			</tr>
 			<tr>
-				<td>Ingredients *</td>
-				<td><input th:field="*{ingredients}" type="text"
-					required="required" /></td>
-
+				<td>Ingridients *</td>
+				<td><ul>
+						<li th:each="ingedients : ${list}">
+							<div class="checkbox">
+								<input type="checkbox" th:field="*{ingredients}"
+									th:value="${ingedients.id}"><span
+									th:utext="${ingedients.name}">..</span>
+							</div>
+					</ul></td>
 			</tr>
 			<tr>
 				<td>Upload Image</td>

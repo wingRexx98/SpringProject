@@ -29,7 +29,7 @@ public class FoodDAO extends JdbcDaoSupport {
 	public FoodDAO(DataSource dataSource) {
 		this.setDataSource(dataSource);
 	}
-	
+
 	@Autowired
 	public IngridientDAO ingDAO;
 
@@ -103,7 +103,31 @@ public class FoodDAO extends JdbcDaoSupport {
 		String sql = SQLCommands.ADD_FOOD;
 		status = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(),
 				food.getImage());
+
+		List<Ingedients> list = ingDAO.convertIntoIngedients(foodForm.getIngredients());
+		sql = "Insert into Product_Ingridient Values (?,?,?)";
+		food.setId(this.getMaxFoodId());
+		for (Ingedients ingre : list) {
+			status = this.getJdbcTemplate().update(sql, food.getId(), ingre.getId(), 3);
+		}
 		return status;
+	}
+
+	public int getMaxFoodId() {
+		List<Food> foods = new ArrayList<Food>();
+
+		String sql = "SELECT * FROM Food";
+		Object[] params = new Object[] {};
+		FoodMapper mapper = new FoodMapper();
+
+		foods = this.getJdbcTemplate().query(sql, params, mapper);
+		int maxId = 0;
+		for (Food food : foods) {
+			if (maxId < food.getId()) {
+				maxId = food.getId();
+			}
+		}
+		return maxId;
 	}
 
 	/**
@@ -120,9 +144,6 @@ public class FoodDAO extends JdbcDaoSupport {
 		int i = 0;
 		Food food = this.toFood(foodForm);
 
-		if (!validFood(food)) {
-			return i = 0;
-		}
 		if (food.getImage() == null) {
 			String sql = SQLCommands.UPDATE_FOOD_WITHOUT_IMAGE;
 			i = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(), id);
@@ -131,6 +152,7 @@ public class FoodDAO extends JdbcDaoSupport {
 			i = this.getJdbcTemplate().update(sql, food.getCateID(), food.getFoodName(), food.getPrice(),
 					food.getImage(), id);
 		}
+		ingDAO.updateRelation(id, foodForm.getIngredients());
 		return i;
 	}
 

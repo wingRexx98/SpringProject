@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.restaurant.dao.CategoryDAO;
 import com.restaurant.dao.FoodDAO;
+import com.restaurant.dao.IngridientDAO;
 import com.restaurant.form.FoodForm;
 import com.restaurant.model.Category;
 import com.restaurant.model.Food;
+import com.restaurant.model.Ingedients;
 
 @Controller
 public class ProductController {
@@ -31,6 +33,9 @@ public class ProductController {
 
 	@Autowired
 	private CategoryDAO categoryDAO;
+
+	@Autowired
+	public IngridientDAO ingDAO;
 
 	/**
 	 * Show list of product with pagination
@@ -65,8 +70,10 @@ public class ProductController {
 	public String newProductHandler(Model model) {
 		FoodForm form = new FoodForm();
 		List<Category> cates = categoryDAO.getCategory();
+		List<Ingedients> ingres = ingDAO.allIngri();
 		model.addAttribute("foodForm", form);
 		model.addAttribute("categoryList", cates);
+		model.addAttribute("list", ingres);
 		return "saveProduct";
 	}
 
@@ -118,9 +125,20 @@ public class ProductController {
 	@RequestMapping(value = { "/editProduct" }, method = RequestMethod.GET)
 	public String editProductHandler(Model model, @RequestParam(name = "id") int id) {
 		Food food = foodDAO.findFood(id);
+		List<Ingedients> listIngri = ingDAO.allIngriForFood(id);
 		List<Category> cates = categoryDAO.getCategory();
+		List<Ingedients> ingres = ingDAO.allIngri();
+
+		List<Integer> list = new ArrayList<>();
+		for (Ingedients ingre : listIngri) {
+			list.add(ingre.getId());
+		}
+		FoodForm form = new FoodForm(food, list);
+		model.addAttribute("foodForm", form);
 		model.addAttribute("food", food);
 		model.addAttribute("categoryList", cates);
+		model.addAttribute("listChecked", list);
+		model.addAttribute("list", ingres);
 		return "editProduct";
 	}
 
@@ -135,13 +153,27 @@ public class ProductController {
 	 * @throws IOException
 	 */
 	@RequestMapping(value = "/updateProduct", method = RequestMethod.POST)
-	public String updateProduct(Model model, @ModelAttribute("food") FoodForm food, @RequestParam(name = "id") int id)
-			throws DataAccessException, IOException {
-		int check = foodDAO.updateFood(food, id);
+	public String updateProduct(Model model, @ModelAttribute("foodForm") FoodForm form,
+			@RequestParam(name = "id") int id) throws DataAccessException, IOException {
+		int check = foodDAO.updateFood(form, id);
+		
 		if (check == 0) {
 			Food food2 = foodDAO.findFood(id);
 			String errorMessage = "Something went wrong, Most likely the product name already exist";
 			List<Category> cates = categoryDAO.getCategory();
+			
+			List<Ingedients> listIngri = ingDAO.allIngriForFood(id);
+			List<Ingedients> ingres = ingDAO.allIngri();
+
+			List<Integer> list = new ArrayList<>();
+			for (Ingedients ingre : listIngri) {
+				list.add(ingre.getId());
+			}
+			FoodForm form2 = new FoodForm(food2, list);
+			model.addAttribute("foodForm", form2);
+			model.addAttribute("categoryList", cates);
+			model.addAttribute("listChecked", list);
+			model.addAttribute("list", ingres);
 			model.addAttribute("categoryList", cates);
 			model.addAttribute("error", errorMessage);
 			model.addAttribute("food", food2);

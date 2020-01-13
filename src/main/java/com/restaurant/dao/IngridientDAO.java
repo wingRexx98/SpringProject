@@ -150,4 +150,13 @@ public class IngridientDAO extends JdbcDaoSupport {
 		}
 		return found;
 	}
+
+	public void updateRelation(int id, List<Integer> listOfId) {
+		String sql = "Delete from Product_Ingridient where foodId =?";
+		this.getJdbcTemplate().update(sql, id);
+		for (Integer i : listOfId) {
+			sql = "Insert into Product_Ingridient Values (?,?,?)";
+			this.getJdbcTemplate().update(sql, id, i, 3);
+		}
+	}
 }

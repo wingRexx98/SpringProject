@@ -174,26 +174,26 @@ public class EmpController {
 		return "empList";
 	}
 
-	/**
-	 * Get account info
-	 * 
-	 * @param model
-	 * @param principal
-	 * @return
-	 */
-	@RequestMapping(value = { "/accountInfo" }, method = RequestMethod.GET)
-	public String accountInfo(Model model, Principal principal) {
-
-		String userName = principal.getName();
-
-		System.out.println("User Name: " + userName);
-
-		Employee emp = empDAO.findEmpByUsername(userName);
-
-		model.addAttribute("userInfo", emp);
-
-		return "accountInfo";
-	}
+//	/**
+//	 * Get account info
+//	 * 
+//	 * @param model
+//	 * @param principal
+//	 * @return
+//	 */
+//	@RequestMapping(value = { "/accountInfo" }, method = RequestMethod.GET)
+//	public String accountInfo(Model model, Principal principal) {
+//
+//		String userName = principal.getName();
+//
+//		System.out.println("User Name: " + userName);
+//
+//		Employee emp = empDAO.findEmpByUsername(userName);
+//
+//		model.addAttribute("userInfo", emp);
+//
+//		return "accountInfo";
+//	}
 
 	/**
 	 * Form to edit account
